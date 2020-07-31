@@ -15,6 +15,5 @@ class ProductoAdmin(admin.ModelAdmin):
 class ProductoClienteAdmin(admin.ModelAdmin):
     search_fields = ('cliente', 'producto', )
     list_display = ('producto', 'cliente', 'precio', 'fecha_de_creacion')
-    list_filter = ('cliente__grupo',)
     autocomplete_fields = ('cliente', 'producto')
     actions = None

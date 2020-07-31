@@ -1,17 +1,6 @@
 from django.test import TestCase
 
-from clientes.models import Cliente, Grupo
-
-
-class GrupoTest(TestCase):
-
-    def crear_grupo(self, nombre="Caño oxígeno"):
-        return Grupo.objects.create(nombre=nombre)
-
-    def test_grupo_creacion(self):
-        g = self.crear_grupo()
-        self.assertTrue(isinstance(g, Grupo))
-        self.assertEqual(g.__str__(), g.nombre)
+from clientes.models import Cliente, PuntoEntregaCliente
 
 
 class ClienteTest(TestCase):
@@ -23,3 +12,16 @@ class ClienteTest(TestCase):
         c = self.crear_cliente()
         self.assertTrue(isinstance(c, Cliente))
         self.assertEqual(c.__str__(), c.razon_social)
+
+
+class PuntoEntregaClienteTest(TestCase):
+
+    def crear_punto(self, referencia="Caño oxígeno"):
+        cliente = Cliente.objects.create(razon_social="Cliente Prueba", ruc="80000000-0")
+        return PuntoEntregaCliente.objects.create(cliente=cliente, referencia=referencia)
+
+    def test_punto_creacion(self):
+        p = self.crear_punto()
+        self.assertTrue(isinstance(p, PuntoEntregaCliente))
+        self.assertEqual(p.__str__(), f'{p.cliente}: {p.referencia}')
+
