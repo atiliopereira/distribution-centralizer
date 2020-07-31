@@ -8,9 +8,6 @@ class Grupo(models.Model):
     dia_de_presentacion = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(30)],
                                               verbose_name="día de presentación de facturas")
 
-    def __repr__(self):
-        return f'Grupo({self.nombre}, {self.dia_de_presentacion})'
-
     def __str__(self):
         return self.nombre
 
@@ -23,10 +20,6 @@ class Cliente(models.Model):
     telefono = models.CharField(max_length=50, blank=True, verbose_name="teléfono")
     email = models.CharField(max_length=100, null=True, blank=True, verbose_name="e-mail")
     activo = models.BooleanField(default=True)
-
-    def __repr__(self):
-        return f'Cliente({self.razon_social}, {self.ruc}, {self.direccion}, {self.telefono}, {self.email}, ' \
-               f'{self.email}, {self.activo}'
 
     def __str__(self):
         return self.razon_social
