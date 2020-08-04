@@ -1,0 +1,88 @@
+            <!-- /.row -->
+            <div id="id_modulos" class="row" style="padding: 30px">
+				{% if request.user.is_superuser %}
+                    <div class="col-lg-3 col-md-6">
+                        <a href="/admin/sistema">
+                            <div class="card card-hover">
+                                <div class="box bg-cyan text-center">
+                                    <div class="box bg-cyan text-center">
+                                        <h2 class="font-light text-white"><img src="/static/img/sistema.png"></h2>
+                                        <h4 class="text-white">SISTEMA</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+
+
+				{% if perms.clientes %}
+                    <div class="col-lg-3 col-md-6">
+                        <a href="/admin/clientes/cliente">
+                            <div class="card card-hover">
+                                <div class="box text-center" style="background-color: #9C27B0">
+                                    <div class="box text-center" style="background-color: #9C27B0">
+                                        <h2 class="font-light text-white"><img src="/static/img/clientes.png"></h2>
+                                        <h4 class="text-white">CLIENTES</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+                
+
+				{% if perms.servicios %}
+                    <div class="col-lg-3 col-md-6">
+                        <a href="/admin/productos">
+                            <div class="card card-hover">
+                                <div class="box bg-warning text-center">
+                                    <div class="box bg-warning text-center">
+                                        <h2 class="font-light text-white"><img src="/static/img/dispenser.png"></h2>
+                                        <h4 class="text-white">PRODUCTOS</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+             </div>
+
+             <div id="id_modulos" class="row" style="padding: 30px">
+
+				{% if perms.remisiones %}
+                     <div class="col-lg-3 col-md-6">
+                        <a href="/admin/remisiones/remision">
+                            <div class="card card-hover">
+                                <div class="box bg-purple text-center">
+                                    <div class="box bg-purple text-center">
+                                        <h2><img class="font-light text-white"><img src="/static/img/truck.png"></h2>
+                                        <h4 class="text-white">REMISIONES</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                {% endif %}
+
+                {% if perms.ventas %}
+                     <div class="col-lg-3 col-md-6">
+                        <a href="/admin/ventas/venta">
+                            <div class="card card-hover">
+                                <div class="box bg-success text-center">
+                                    <div class="box bg-success text-center">
+                                        <h2><img class="font-light text-white"><img src="/static/img/invoice.png"></h2>
+                                        <h4 class="text-white">VENTAS</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                {% endif %}
+
+
+
+            </div>
+            <!-- /.row -->
