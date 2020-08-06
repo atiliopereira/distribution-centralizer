@@ -25,7 +25,7 @@ class Vehiculo(models.Model):
                                     verbose_name="número de registro único del automotor de remolquetracto o semiremolque")
 
     def __str__(self):
-        return f'Vechículo marca: {self.marca} - RUA: {self.rua}'
+        return f'{self.marca} ({self.rua})'
 
 
 class Cargo(models.Model):
