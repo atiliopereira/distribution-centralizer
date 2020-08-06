@@ -60,6 +60,11 @@ class Remision(models.Model):
     def __str__(self):
         return f'Remisión Nro: {self.numero_de_remision}'
 
+    def save(self, *args, **kwargs):
+        if self.estado == EstadoDocumento.PENDIENTE:
+            self.fecha_de_facturacion = self.get_fecha_de_facturacion()
+        super(Remision, self).save(*args, **kwargs)
+
     def get_fecha_de_facturacion(self):
         hoy = datetime.date.today()
         fecha_vencimiento_mes_actual = datetime.datetime(hoy.year, hoy.month, self.cliente.dia_de_presentacion)
