@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from dateutil import relativedelta
 
 from django.db import models
 
@@ -54,9 +55,26 @@ class Remision(models.Model):
 
     estado = models.CharField(max_length=3, choices=EstadoDocumento.ESTADOS,
                               default=EstadoDocumento.PENDIENTE, editable=False)
+    fecha_de_facturacion = models.DateField(null=True, blank=True, editable=False)
 
     def __str__(self):
         return f'Remisión Nro: {self.numero_de_remision}'
+
+    def get_fecha_de_facturacion(self):
+        hoy = datetime.date.today()
+        fecha_vencimiento_mes_actual = datetime.datetime(hoy.year, hoy.month, self.cliente.dia_de_presentacion)
+        fecha_de_facturacion = fecha_vencimiento_mes_actual
+        if not self.fecha_de_facturacion:
+            if int(hoy.day) <= int(self.cliente.dia_de_presentacion):
+                pass
+            elif int(hoy.day) > int(self.cliente.dia_de_presentacion):
+                nextmonth = datetime.date.today() + relativedelta.relativedelta(months=1)
+                fecha_de_facturacion = datetime.datetime(nextmonth.year, nextmonth.month, self.cliente.dia_de_presentacion)
+        else:
+            fecha_de_facturacion = self.fecha_de_facturacion
+        return fecha_de_facturacion.date()
+
+    get_fecha_de_facturacion.short_description = 'Fecha de facturación'
 
 
 class DetalleDeRemision(models.Model):
