@@ -1,9 +1,10 @@
 {% extends "admin/change_list.html" %}
 {% load i18n admin_urls static admin_list %}
-{% load remision_tags %}
+{% load venta_tags %}
 
 {% block search %}
-    {% remision_search_form cl %}
+    {% venta_search_form cl %}
+    <div style="margin-right: 280px;text-align: right; margin-bottom: 10px;"><h1>Monto Total: {{ total }}</h1></div>
 {% endblock %}
 
 
@@ -11,7 +12,7 @@
     <ul class="object-tools">
         {% if request.user.is_superuser %}
         <li>
-          <a style="background-color: forestgreen" href="/admin/remisiones/lista_remisiones/{{ params }}">
+          <a style="background-color: forestgreen" href="/admin/ventas/lista_ventas/{{ params }}">
                 Imprimir lista <i class="fa fa-file-excel-o"></i>
           </a>
         </li>
@@ -19,8 +20,8 @@
         {% block object-tools-items %}
             {% if has_add_permission %}
              <li>
-                <a href="/admin/remisiones/remision/add/" class="addlink">
-                    Añadir Remisión
+                <a href="/admin/ventas/venta/add/" class="addlink">
+                    Añadir Venta
                 </a>
             </li>
             {% endif %}

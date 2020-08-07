@@ -41,7 +41,7 @@ class RemisionAdmin(admin.ModelAdmin):
     def crear_factura_action(self, request, queryset):
         if all(queryset[0].cliente.razon_social == remision.cliente.razon_social and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
             try:
-                venta = Venta.objects.create(numero_de_factura='COMPLETAR', condicion_de_venta=CondicionDeVenta.CREDITO,
+                venta = Venta.objects.create(numero_de_factura='000-000-0000000', condicion_de_venta=CondicionDeVenta.CREDITO,
                                              cliente=queryset[0].cliente, estado=EstadoDocumento.PENDIENTE)
                 for remision in queryset:
                     RemisionEnVenta.objects.create(venta=venta, remision=remision)

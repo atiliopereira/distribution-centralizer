@@ -5,6 +5,28 @@ from sistema.constants import EstadoDocumento
 from ventas.models import Venta, RemisionEnVenta
 
 
+def get_ventas_queryset(request, form):
+    qs = Venta.objects.all()
+    estado = request.GET.get('estado__exact', '')
+    condicion_de_venta = request.GET.get('condicion_de_venta__exact', '')
+    if estado != '':
+        qs = qs.filter(estado__exact=estado)
+    if condicion_de_venta != '':
+        qs = qs.filter(condicion_de_venta__exact=condicion_de_venta)
+    if form.cleaned_data.get('numero', ''):
+        qs = qs.filter(numero_de_factura__icontains=form.cleaned_data['numero'])
+    if form.cleaned_data.get('cliente', ''):
+        qs = qs.filter(cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
+    if form.cleaned_data.get('remision', ''):
+        qs = qs.filter(pk__in=[i.venta_id for i in RemisionEnVenta.objects.filter(
+            remision__numero_de_remision__icontains=form.cleaned_data['remision'])])
+    if form.cleaned_data.get('desde', ''):
+        qs = qs.filter(fecha_de_emision__gte=form.cleaned_data.get('desde', ''))
+    if form.cleaned_data.get('hasta', ''):
+        qs = qs.filter(fecha_de_emision__lte=form.cleaned_data.get('hasta', ''))
+    return qs
+
+
 def anular_venta(request, pk):
     context = RequestContext(request)
     venta = Venta.objects.get(pk=pk)
