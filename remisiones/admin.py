@@ -7,6 +7,8 @@ from remisiones.forms import RemisionSearchForm
 from remisiones.models import DetalleDeRemision, Remision
 from remisiones.views import get_remisiones_queryset
 from sistema.constants import EstadoDocumento
+from ventas.constants import CondicionDeVenta
+from ventas.models import Venta, RemisionEnVenta
 
 
 class DetalleDeRemisionInlineAdmin(admin.TabularInline):
@@ -36,45 +38,30 @@ class RemisionAdmin(admin.ModelAdmin):
         html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>'  % obj.pk
         return mark_safe(html)
 
-    def cambiar_estado_remisiones(self, remision):
-        remision.estado = EstadoDocumento.CONFIRMADO
-        remision.save()
-
     def crear_factura_action(self, request, queryset):
-        remisiones_agregadas = []
-        remisiones_no_agregadas = []
+        if all(queryset[0].cliente.razon_social == remision.cliente.razon_social and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
+            try:
+                venta = Venta.objects.create(numero_de_factura='COMPLETAR', condicion_de_venta=CondicionDeVenta.CREDITO,
+                                             cliente=queryset[0].cliente, estado=EstadoDocumento.PENDIENTE)
+                for remision in queryset:
+                    RemisionEnVenta.objects.create(venta=venta, remision=remision)
 
-        if all(queryset[0].cliente.razon_social == remision.cliente.razon_social for remision in queryset):
-            for remision in queryset:
-                if remision.estado == EstadoDocumento.PENDIENTE:
-                    remisiones_agregadas.append(remision)
-                else:
-                    remisiones_no_agregadas.append(remision)
-
-            if remisiones_no_agregadas:
                 datos = {
-                    's': 's' if len(remisiones_no_agregadas) > 1 else '',
-                    'es': 'es' if len(remisiones_no_agregadas) > 1 else '',
-                    'n': 'n' if len(remisiones_no_agregadas) > 1 else '',
-                    'remisiones': " - ".join(map(str, remisiones_no_agregadas))
-                }
-
-                self.message_user(request, mark_safe(
-                    u'No puede INCLUIR la{s} Remision{es} "<strong>{remisiones}</strong>" porque no se encuentra{n} en estado PENDIENTE'.format(**datos)), messages.ERROR)
-
-            if remisiones_agregadas and all(remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
-                datos = {
-                    's': 's' if len(remisiones_agregadas) > 1 else '',
-                    'es': 'es' if len(remisiones_agregadas) > 1 else '',
-                    'remisiones': " - ".join(map(str, remisiones_agregadas))
+                    's': 's' if len(queryset) > 1 else '',
+                    'es': 'es' if len(queryset) > 1 else '',
+                    'remisiones': " - ".join(map(str, queryset))
                 }
                 self.message_user(request, mark_safe(
                     u'Factura de venta creada con la{s} remision{es} "<strong>{remisiones}</strong>"'.format(**datos)),
                                   messages.INFO)
 
+            except Exception as e:
+                self.message_user(request, mark_safe(
+                    u'Ocurrió un error al crear la factura de venta. Error: %s' % str(e)), messages.ERROR)
+
         else:
             self.message_user(request, mark_safe(
-                u'Las remisiones deben ser de un único cliente'), messages.ERROR)
+                u'Las remisiones deben ser de un único cliente y estar en estado pendiente.'), messages.ERROR)
 
     crear_factura_action.short_description = "Crear Factura con remision/es seleccionada/s"
 

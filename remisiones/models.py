@@ -77,7 +77,7 @@ class Remision(models.Model):
                 fecha_de_facturacion = datetime.datetime(nextmonth.year, nextmonth.month, self.cliente.dia_de_presentacion)
         else:
             fecha_de_facturacion = self.fecha_de_facturacion
-        return fecha_de_facturacion.date()
+        return fecha_de_facturacion
 
     get_fecha_de_facturacion.short_description = 'Fecha de facturación'
 
