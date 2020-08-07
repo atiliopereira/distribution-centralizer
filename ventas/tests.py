@@ -13,4 +13,5 @@ class VentaTest(TestCase):
     def test_creacion_venta(self):
         v = self.crear_venta()
         self.assertTrue(isinstance(v, Venta))
-        self.assertEqual(v.__str__(), f'Factura Venta {v.condicion_de_venta} nro: {v.numero_de_factura} ({v.cliente})')
+        self.assertEqual(v.__str__(),
+                         f'Factura Venta {v.get_condicion_de_venta_display()} nro: {v.numero_de_factura} ({v.cliente})')
