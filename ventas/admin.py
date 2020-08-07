@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from sistema.constants import EstadoDocumento
+from ventas.forms import VentaSearchForm
 from ventas.models import DetalleDeVenta, Venta
+from ventas.views import get_ventas_queryset
 
 
 class DetalleDeVentaInlineAdmin(admin.TabularInline):
@@ -12,12 +14,15 @@ class DetalleDeVentaInlineAdmin(admin.TabularInline):
 
 
 class VentaAdmin(admin.ModelAdmin):
-    list_display = (
-    'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado', 'total', 'anular')
+    list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado', 'total', 'anular')
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
     actions = None
+
+    def editar(self, obj):
+        html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        return mark_safe(html)
 
     def anular(self, obj):
         if obj.estado != EstadoDocumento.ANULADO:
@@ -28,6 +33,38 @@ class VentaAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def get_queryset(self, request):
+        form = self.advanced_search_form
+        qs = get_ventas_queryset(request, form)
+        return qs
+
+    def changelist_view(self, request, extra_context=None, **kwargs):
+        self.my_request_get = request.GET.copy()
+        self.advanced_search_form = VentaSearchForm(request.GET)
+        self.advanced_search_form.is_valid()
+        self.other_search_fields = {}
+        params = request.get_full_path().split('?')
+
+        extra_context = extra_context or {}
+        extra_context.update({'asf': VentaSearchForm,
+                              'my_request_get': self.my_request_get,
+                              'params': '?%s' % params[1].replace('%2F', '/') if len(params) > 1 else ''
+                              })
+        request.GET._mutable = True
+
+        for key in self.advanced_search_form.fields.keys():
+            try:
+                temp = request.GET.pop(key)
+            except KeyError:
+                pass
+            else:
+                if temp != ['']:
+                    self.other_search_fields[key] = temp
+        request.GET_mutable = False
+
+        return super(VentaAdmin, self) \
+            .changelist_view(request, extra_context=extra_context, **kwargs)
 
 
 admin.site.register(Venta, VentaAdmin)
