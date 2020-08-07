@@ -66,8 +66,3 @@ class RemisionEnVenta(models.Model):
                                           precio_unitario=precio, subtotal=subtotal)
             self.venta.save()
         super(RemisionEnVenta, self).save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        self.remision.estado = EstadoDocumento.PENDIENTE
-        self.remision.save()
-        super(RemisionEnVenta, self).delete(*args, **kwargs)

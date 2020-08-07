@@ -32,7 +32,7 @@ def get_precio(cliente, producto, fecha):
     precio = producto.precio
     #oldest first
     productos = ProductoCliente.objects.filter(cliente=cliente).filter(producto=producto).order_by('id')
-    if len(productos) > 1:
+    if len(productos) >= 1:
         for x in productos:
             if fecha >= x.fecha_de_creacion:
                 precio = x.precio
