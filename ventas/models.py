@@ -2,6 +2,7 @@
 import datetime
 
 from django.db import models
+from django.db.models import Sum
 
 from clientes.models import Cliente
 from remisiones.models import Remision, DetalleDeRemision
@@ -14,6 +15,7 @@ class Venta(models.Model):
     class Meta:
         verbose_name = "Factura de venta"
         verbose_name_plural = "Facturas de venta"
+
     numero_de_factura = models.CharField(max_length=30)
     fecha_de_emision = models.DateField(default=datetime.date.today)
     condicion_de_venta = models.CharField(max_length=3, choices=CondicionDeVenta.CONDICIONES,
@@ -56,13 +58,23 @@ class RemisionEnVenta(models.Model):
     remision = models.ForeignKey(Remision, on_delete=models.PROTECT)
 
     def save(self, *args, **kwargs):
+        detalles_de_remision = DetalleDeRemision.objects.filter(remision=self.remision)
+
+        for detalle_de_remision in detalles_de_remision:
+            if DetalleDeVenta.objects.filter(venta=self.venta).filter(producto=detalle_de_remision.producto).exists():
+                detalle_de_venta = DetalleDeVenta.objects.filter(venta=self.venta).get(
+                    producto=detalle_de_remision.producto)
+                detalle_de_venta.cantidad += detalle_de_remision.cantidad
+                detalle_de_venta.subtotal = detalle_de_venta.cantidad * detalle_de_venta.precio_unitario
+                detalle_de_venta.save()
+            else:
+                precio = get_precio(self.venta.cliente, detalle_de_remision.producto,
+                                    detalle_de_remision.remision.fecha_de_emision)
+                subtotal = precio * detalle_de_remision.cantidad
+                DetalleDeVenta.objects.create(venta=self.venta, cantidad=detalle_de_remision.cantidad,
+                                              producto=detalle_de_remision.producto, precio_unitario=precio,
+                                              subtotal=subtotal)
         self.remision.estado = EstadoDocumento.CONFIRMADO
         self.remision.save()
-        detalles = DetalleDeRemision.objects.filter(remision=self.remision)
-        for detalle in detalles:
-            precio = get_precio(self.venta.cliente, detalle.producto, detalle.remision.fecha_de_emision)
-            subtotal = precio * detalle.cantidad
-            DetalleDeVenta.objects.create(venta=self.venta, cantidad=detalle.cantidad, producto=detalle.producto,
-                                          precio_unitario=precio, subtotal=subtotal)
-            self.venta.save()
+        self.venta.save()
         super(RemisionEnVenta, self).save(*args, **kwargs)
