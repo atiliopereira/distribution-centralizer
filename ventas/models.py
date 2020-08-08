@@ -2,7 +2,6 @@
 import datetime
 
 from django.db import models
-from django.db.models import Sum
 
 from clientes.models import Cliente
 from remisiones.models import Remision, DetalleDeRemision
