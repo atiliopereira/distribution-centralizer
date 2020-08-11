@@ -36,7 +36,8 @@ class Venta(models.Model):
         return suma
 
     def save(self, *args, **kwargs):
-        self.total = self.get_total()
+        if self.pk:
+            self.total = self.get_total()
         super(Venta, self).save(*args, **kwargs)
 
 

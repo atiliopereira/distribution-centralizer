@@ -3,18 +3,21 @@ from django.utils.safestring import mark_safe
 
 from sistema.constants import EstadoDocumento
 from sistema.globales import separar
-from ventas.forms import VentaSearchForm
+from ventas.forms import VentaSearchForm, VentaForm
 from ventas.models import DetalleDeVenta, Venta
 from ventas.views import get_ventas_queryset
 
 
 class DetalleDeVentaInlineAdmin(admin.TabularInline):
     model = DetalleDeVenta
-    autocomplete_fields = ('producto',)
     extra = 0
 
 
 class VentaAdmin(admin.ModelAdmin):
+    class Media:
+        js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js', )
+
+    form = VentaForm
     list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado', 'total', 'anular')
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
