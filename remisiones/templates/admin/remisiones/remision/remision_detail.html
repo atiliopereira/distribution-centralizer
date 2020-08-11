@@ -1,0 +1,379 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="{% url 'admin:app_list' 'remisiones' %}">Remisiones</a>
+        &rsaquo; <a href="/admin/remisiones/remision">Notas de remisión</a>
+        &rsaquo; Detalle de remisión
+    </div>
+
+{% endblock %}
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+    <h1 style="text-align:center">Nota de {{ object }}
+
+        {% if object.estado == 'ANU' %} <span class="label" style="background-color: #f44336;">ANULADA</span>
+        {% elif object.estado == 'PEN' %} <span class="label" style="background-color: #2196F3;">PENDIENTE</span>
+        {% elif object.estado == 'CON' %} <span class="label" style="background-color: #4CAF50;">FACTURADO</span>
+        {% endif %}</h1>
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos de la remisión</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Numero de remision</th>
+                    <td> {{ object.numero_de_remision }} </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Fecha de emision </th>
+                    <td> {{ object.fecha_de_emision }} </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Destinatario de la mercadería</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Cliente </th>
+                        <td> {{ object.cliente }} </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos del traslado</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Motivo del traslado </th>
+                    <td>
+                        {% if object.motivo_del_traslado %}
+                            {{ object.motivo_del_traslado }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Comprobante de venta </th>
+                    <td>
+                        {% if object.comprobante_de_venta %}
+                            {{ object.comprobante_de_venta }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Numero de Comprobante de venta </th>
+                    <td>
+                        {% if object.numero_de_comprobante_de_venta %}
+                            {{ object.numero_de_comprobante_de_venta }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Numero de timbrado </th>
+                    <td>
+                        {% if object.numero_de_timbrado %}
+                            {{ object.numero_de_timbrado }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr style="border-bottom:2px solid black">
+                    <th scope="row"> Fecha de expedicion </th>
+                    <td>
+                        {% if object.fecha_de_expedicion %}
+                            {{ object.fecha_de_expedicion }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Fecha de inicio del traslado </th>
+                    <td>
+                        {% if object.fecha_de_inicio_del_traslado %}
+                            {{ object.fecha_de_inicio_del_traslado }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr style="border-bottom:2px solid black">
+                    <th scope="row"> Fecha estimada de termino del traslado </th>
+                    <td>
+                        {% if object.fecha_estimada_de_termino_del_traslado %}
+                            {{ object.fecha_estimada_de_termino_del_traslado }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Direccion del punto de partida </th>
+                    <td>
+                        {% if object.direccion_del_punto_de_partida %}
+                            {{ object.direccion_del_punto_de_partida }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Ciudad de partida </th>
+                    <td>
+                        {% if object.ciudad_de_partida %}
+                            {{ object.ciudad_de_partida }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr style="border-bottom:2px solid black">
+                    <th scope="row"> Departamento de partida </th>
+                    <td>
+                        {% if object.departamento_de_partida %}
+                            {{ object.departamento_de_partida }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Direccion del punto de llegada </th>
+                    <td>
+                        {% if object.direccion_del_punto_de_llegada %}
+                            {{ object.direccion_del_punto_de_llegada }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Ciudad de llegada </th>
+                    <td>
+                        {% if object.ciudad_de_llegada %}
+                            {{ object.ciudad_de_llegada }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr style="border-bottom:2px solid black">
+                    <th scope="row"> Departamento de llegada </th>
+                    <td>
+                        {% if object.departamento_de_llegada %}
+                            {{ object.departamento_de_llegada }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr style="border-bottom:2px solid black">
+                    <th scope="row"> Kilometros estimados de recorrido </th>
+                    <td>
+                        {% if object.kilometros_estimados_de_recorrido %}
+                            {{ object.kilometros_estimados_de_recorrido|floatformat:"2"|default_if_none:"&nbsp;" }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Cambio de fecha de termino del traslado o punto de llegada </th>
+                    <td>
+                        {% if object.cambio_de_fecha_de_termino_del_traslado_o_punto_de_llegada %}
+                            {{ object.cambio_de_fecha_de_termino_del_traslado_o_punto_de_llegada }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Motivo </th>
+                    <td>
+                        {% if object.motivo %}
+                            {{ object.motivo }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos del vehículo de transporte</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Marca del vehiculo</th>
+                    <td> {{ object.vehiculo.marca }} </td>
+                    <td>
+                        {% if object.comprobante_de_venta %}
+                            {{ object.comprobante_de_venta }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Numero de registro unico del automotor (RUA) </th>
+                    <td> {{ object.vehiculo.rua }} </td>
+                    <td>
+                        {% if object.comprobante_de_venta %}
+                            {{ object.comprobante_de_venta }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Numero de registro unico del automotor (RUA) de remolquetracto/semiremolque </th>
+
+                    <td>
+                        {% if object.vehiculo.rua_remolque %}
+                            {{ object.vehiculo.rua_remolque }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos del conductor</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Nombre </th>
+                    <td>
+                        {% if object.chofer %}
+                            {{ object.chofer }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"> RUC/CI </th>
+                    <td>
+                        {% if object.chofer.ruc %}
+                            {{ object.chofer.ruc }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"> Domicilio </th>
+                    <td>
+                        {% if object.chofer.direccion %}
+                            {{ object.chofer.direccion }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    {% if detalles %}
+        <caption><h2 style="text-align:center">Detalle de la Remision</h2></caption>
+        <div class="w3-card-4" style="width:90%;margin-left:auto;margin-right:auto;">
+            <table style="width: 100%">
+                <tr style="background-color: lightgrey">
+                    <th>Cantidad</th>
+                    <th>Unidad de medida</th>
+                    <th>Descripción detallada</th>
+                </tr>
+
+                {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.cantidad|floatformat:"0"|default_if_none:"&nbsp;" }}</td>
+                    <td>{{ detalle.unidad_de_medida }}</td>
+                    <td>{{ detalle.producto }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    {% endif %}
+
+    <button type="button" class="btn btn-primary" onclick="window.history.back(); return false;">Volver</button>
+
+{% endblock %}
