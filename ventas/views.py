@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 
@@ -28,7 +29,6 @@ def get_ventas_queryset(request, form):
 
 
 def anular_venta(request, pk):
-    context = RequestContext(request)
     venta = Venta.objects.get(pk=pk)
     if request.method == 'POST':
         venta.estado = EstadoDocumento.ANULADO
@@ -44,4 +44,4 @@ def anular_venta(request, pk):
 
     mensaje = f'¿Confirmar anulación de {venta}?'
     advertencia = f'ADVERTENCIA: esta acción no se puede revertir.'
-    return render(request, 'venta_confirm.html', {'mensaje': mensaje, 'advertencia': advertencia})
+    return render(request, 'admin/ventas/venta/venta_confirm.html', {'mensaje': mensaje, 'advertencia': advertencia})
