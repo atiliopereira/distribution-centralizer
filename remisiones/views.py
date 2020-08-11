@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
+from django.views.generic import DetailView
 
-from remisiones.models import Remision
+from remisiones.models import Remision, DetalleDeRemision
+
+
+class RemisionDetailView(DetailView):
+    model = Remision
+    template_name = "admin/remisiones/remision/remision_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(RemisionDetailView, self).get_context_data(**kwargs)
+        context['detalles'] = DetalleDeRemision.objects.filter(remision=self.object)
+        return context
 
 
 def get_remisiones_queryset(request, form):

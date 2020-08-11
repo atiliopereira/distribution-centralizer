@@ -18,11 +18,45 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'fecha_de_facturacion', 'cliente', 'chofer', 'vehiculo', 'estado', 'anular')
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'chofer', 'vehiculo', 'estado', 'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )
     autocomplete_fields = ('cliente', 'ciudad_de_partida', 'ciudad_de_llegada', 'vehiculo', 'chofer', )
     actions = ('crear_factura_action', )
+    fieldsets = (
+        (None, {
+            'fields': ('numero_de_remision', 'fecha_de_emision', )
+        }),
+
+        ('DESTINATARIO DE LA MERCADERIA', {
+            'fields': ('cliente', )
+        }),
+
+        ('DATOS DEL TRASLADO', {
+            'fields': (
+                ('motivo_del_traslado', 'comprobante_de_venta'),
+                ('numero_de_comprobante_de_venta', 'numero_de_timbrado'),
+                'fecha_de_expedicion',
+                ('fecha_de_inicio_del_traslado', 'fecha_estimada_de_termino_del_traslado'),
+                'direccion_del_punto_de_partida',
+                ('ciudad_de_partida', 'departamento_de_partida'),
+                'direccion_del_punto_de_llegada',
+                ('ciudad_de_llegada', 'departamento_de_llegada'),
+                'kilometros_estimados_de_recorrido',
+                'cambio_de_fecha_de_termino_del_traslado_o_punto_de_llegada',
+                'motivo',
+            )
+        }),
+
+        ('DATOS DEL VEHICULO DE TRANSPORTE', {
+            'fields': ('vehiculo', )
+        }),
+
+        ('DATOS DEL CONDUCTOR DEL VEHICULO', {
+            'fields': ('chofer', )
+        }),
+
+    )
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -31,11 +65,21 @@ class RemisionAdmin(admin.ModelAdmin):
         return actions
 
     def editar(self, obj):
-        html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-edit"></i></a>'  % obj.pk
+        if obj.estado == EstadoDocumento.PENDIENTE:
+            html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        else:
+            html = ''
+        return mark_safe(html)
+
+    def ver(self, obj):
+        html = '<a href="/admin/remisiones/remision_detail/%s" class="icon-block"> <i class="fa fa-eye"></i></a>' % obj.pk
         return mark_safe(html)
 
     def anular(self, obj):
-        html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>'  % obj.pk
+        if obj.estado == EstadoDocumento.PENDIENTE:
+            html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>'  % obj.pk
+        else:
+            html = ''
         return mark_safe(html)
 
     def crear_factura_action(self, request, queryset):
