@@ -77,7 +77,7 @@ class RemisionAdmin(admin.ModelAdmin):
 
     def anular(self, obj):
         if obj.estado == EstadoDocumento.PENDIENTE:
-            html = '<a href="/admin/remisiones/remision/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>'  % obj.pk
+            html = '<a href="/admin/remisiones/anular_remision/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>'  % obj.pk
         else:
             html = ''
         return mark_safe(html)

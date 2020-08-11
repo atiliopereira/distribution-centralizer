@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from django.shortcuts import render, redirect
+from django.template import RequestContext
 from django.views.generic import DetailView
 
 from remisiones.models import Remision, DetalleDeRemision
+from sistema.constants import EstadoDocumento
 
 
 class RemisionDetailView(DetailView):
@@ -29,3 +32,16 @@ def get_remisiones_queryset(request, form):
         qs = qs.filter(fecha_de_emision__lte=form.cleaned_data.get('hasta', ''))
     return qs
 
+
+def anular_remision(request, pk):
+    remision = Remision.objects.get(pk=pk)
+    if request.method == 'POST':
+        remision.estado = EstadoDocumento.ANULADO
+        remision.fecha_de_facturacion = None
+        remision.save()
+
+        return redirect('/admin/remisiones/remision/')
+
+    mensaje = f'¿Confirmar anulación de {remision}?'
+    advertencia = f'ADVERTENCIA: esta acción no se puede revertir.'
+    return render(request, 'admin/remisiones/remision/remision_confirm.html', {'mensaje': mensaje, 'advertencia': advertencia})
