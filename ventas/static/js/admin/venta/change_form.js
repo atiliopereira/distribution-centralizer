@@ -41,7 +41,6 @@ function calcular_total() {
 }
 
 function obtener_precio() {
-    console.log("obeteniendo")
     var rows = jQuery("tr[id*='detalledeventa_set']");
     var rows_length = rows.length -1;
     for( var i=0; i<rows_length; i++){

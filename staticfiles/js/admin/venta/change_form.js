@@ -7,14 +7,10 @@ jQuery.noConflict();
             obtener_precio();
         });
 
-    });
-
-    jQuery('form input[type=submit]').click(function(e) {
-            jQuery('.auto').each(function (){
-                jQuery(this).val((jQuery(this).val()!='')?unformat(document.getElementById(this.id.toString())):'');
-            });
-            $('#id_total').val(parseInt(total));
+        jQuery('form input[type=submit]').click(function(e) {
+            guardar();
         });
+    });
 })(django.jQuery);
 
 function calcular_subtotal() {
@@ -45,7 +41,6 @@ function calcular_total() {
 }
 
 function obtener_precio() {
-    console.log("obeteniendo")
     var rows = jQuery("tr[id*='detalledeventa_set']");
     var rows_length = rows.length -1;
     for( var i=0; i<rows_length; i++){
@@ -69,4 +64,10 @@ function unformat(input){
 
 function separarMiles(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function guardar() {
+    jQuery('.auto').each(function (){
+        jQuery(this).val((jQuery(this).val()!='')?unformat(document.getElementById(this.id.toString())):'');
+    });
 }
