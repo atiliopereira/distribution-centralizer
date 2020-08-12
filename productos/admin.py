@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.decorators import register
+from django.utils.safestring import mark_safe
 
 from productos.forms import ProductoClienteSearchForm
 from productos.models import Producto, ProductoCliente
@@ -9,16 +10,29 @@ from productos.views import get_productoscliente_queryset
 @register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
     search_fields = ('descripcion',)
-    list_display = ('descripcion', 'precio', 'activo')
+    list_display = ('editar', 'descripcion', 'precio', 'activo', 'ver', )
+    list_filter = ('activo', )
     actions = None
+
+    def editar(self, obj):
+        html = '<a href="/admin/productos/producto/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        return mark_safe(html)
+
+    def ver(self, obj):
+        html = '<a href="/admin/productos/producto_detail/%s" class="icon-block"> <i class="fa fa-eye"></i></a>' % obj.pk
+        return mark_safe(html)
 
 
 @register(ProductoCliente)
 class ProductoClienteAdmin(admin.ModelAdmin):
     search_fields = ('cliente__razon_social', 'producto__descripcion', )
-    list_display = ('producto', 'cliente', 'precio', 'fecha_de_creacion')
+    list_display = ('editar', 'producto', 'cliente', 'precio', 'fecha_de_creacion', )
     autocomplete_fields = ('cliente', 'producto')
     actions = None
+
+    def editar(self, obj):
+        html = '<a href="/admin/productos/productocliente/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        return mark_safe(html)
 
     def get_queryset(self, request):
         form = self.advanced_search_form
