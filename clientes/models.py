@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.apps import apps
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -15,6 +16,21 @@ class Cliente(models.Model):
 
     def __str__(self):
         return f'{self.razon_social} (RUC: {self.ruc})'
+
+    def get_deuda(self):
+        facturas = apps.get_model("ventas", "Venta").objects.filter(cliente_id=self.id).exclude(estado='ANU')
+        total = 0
+        for factura in facturas:
+            total += factura.total
+        return total
+
+    get_deuda.short_description = 'Deuda a la fecha'
+
+    def get_remisiones_pendientes(self):
+        remisiones = apps.get_model("remisiones", "remision").objects.filter(cliente_id=self.id).filter(estado='PEN')
+        return remisiones.count()
+
+    get_remisiones_pendientes.short_description = 'Remisiones pendientes de facturación'
 
 
 class PuntoEntregaCliente(models.Model):
