@@ -22,7 +22,7 @@ class ProductoCliente(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
     precio = models.DecimalField(max_digits=15, decimal_places=0, default=0)
-    fecha_de_creacion = models.DateField(default=datetime.date.today, editable=False)
+    fecha_de_creacion = models.DateField(default=datetime.date.today, verbose_name="Inicio de vigencia")
 
     def __str__(self):
         return f'{self.producto} ({self.cliente}): {self.precio}'
