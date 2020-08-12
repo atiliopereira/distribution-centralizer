@@ -1,0 +1,90 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="{% url 'admin:app_list' 'productos' %}">Productos</a>
+        &rsaquo; <a href="/admin/productos/producto">Lista de productos</a>
+        &rsaquo; Detalle de producto
+    </div>
+
+{% endblock %}
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+    <h1 style="text-align:center; color: black">{{ object.descripcion }}
+        {% if object.activo %} <span class="label" style="background-color: #4CAF50;">ACTIVO</span>
+        {% else %} <span class="label" style="background-color: #f44336;">INACTIVO</span>
+        {% endif %}</h1>
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos del producto</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Precio de referencia </th>
+                    <td> {{ object.precio }} </td>
+                </tr>
+                <tr>
+                    <th scope="row"> Total vendido a la fecha </th>
+                    <td>
+                        {% if productos_vendidos %}
+                            {{ productos_vendidos }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    {% if productos_por_cliente %}
+        <caption><h4 style="text-align:center">PRECIOS POR CLIENTE</h4></caption>
+        <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+            <table style="width: 100%">
+                <tr style="background-color: #f1f1f1">
+                    <th>Cliente</th>
+                    <th>Precio</th>
+                </tr>
+
+                {% for productocliente in productos_por_cliente %}
+                    <tr>
+                        <td>
+                            <a href="/admin/clientes/cliente_detail/{{ productocliente.0.pk }}">{{ productocliente.0 }}</a>
+                        </td>
+                        <td>
+                            {{ productocliente.1|floatformat:"0"|default_if_none:"&nbsp;" }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+    <button type="button" class="btn btn-primary" onclick="window.history.back(); return false;">Volver</button>
+
+{% endblock %}
