@@ -68,3 +68,15 @@ def anular_venta(request, pk):
     mensaje = f'¿Confirmar anulación de {venta}?'
     advertencia = f'ADVERTENCIA: esta acción no se puede revertir.'
     return render(request, 'admin/ventas/venta/venta_confirm.html', {'mensaje': mensaje, 'advertencia': advertencia})
+
+
+def confirmar_venta(request, pk):
+    venta = Venta.objects.get(pk=pk)
+    if request.method == 'POST':
+        venta.estado = EstadoDocumento.CONFIRMADO
+        venta.save()
+        return redirect('/admin/ventas/venta/')
+
+    mensaje = f'¿Marcar {venta} como cobrada?'
+    advertencia = f'ADVERTENCIA: esta acción no se puede revertir.'
+    return render(request, 'admin/ventas/venta/venta_confirm.html', {'mensaje': mensaje, 'advertencia': advertencia})
