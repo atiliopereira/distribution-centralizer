@@ -12,6 +12,7 @@ class PuntoEntregaClienteInline(admin.TabularInline):
 @register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
     search_fields = ('razon_social', 'ruc', 'direccion', 'telefono', 'email',)
-    list_display = ('razon_social', 'ruc', 'direccion', 'telefono', 'email', 'dia_de_presentacion', 'activo')
+    list_display = ('razon_social', 'ruc', 'direccion', 'telefono', 'email', 'dia_de_presentacion', 'activo',
+                    'get_deuda', 'get_remisiones_pendientes')
     inlines = (PuntoEntregaClienteInline, )
     actions = None
