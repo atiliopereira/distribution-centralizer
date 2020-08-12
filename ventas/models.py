@@ -38,6 +38,8 @@ class Venta(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             self.total = self.get_total()
+        if self.condicion_de_venta == CondicionDeVenta.CONTADO:
+            self.estado = EstadoDocumento.CONFIRMADO
         super(Venta, self).save(*args, **kwargs)
 
 

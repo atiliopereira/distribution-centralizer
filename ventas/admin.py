@@ -19,7 +19,7 @@ class VentaAdmin(admin.ModelAdmin):
 
     form = VentaForm
     list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado',
-                    'total', 'ver', 'anular', )
+                    'total', 'acciones', 'ver', 'anular', )
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
@@ -39,6 +39,13 @@ class VentaAdmin(admin.ModelAdmin):
     def anular(self, obj):
         if obj.estado != EstadoDocumento.ANULADO:
             html = '<a href="/admin/ventas/anular_venta/%s" class="icon-block"> <i class="fa fa-times-circle" style="color:red"></i></a>' % obj.pk
+        else:
+            html = ''
+        return mark_safe(html)
+
+    def acciones(self, obj):
+        if obj.estado == EstadoDocumento.PENDIENTE:
+            html = '<a href="/admin/ventas/confirmar_venta/%s">Marcar como pagado</a>' % obj.pk
         else:
             html = ''
         return mark_safe(html)
