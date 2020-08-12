@@ -1,0 +1,133 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="{% url 'admin:app_list' 'ventas' %}">Ventas</a>
+        &rsaquo; <a href="/admin/ventas/venta">Facturas de venta</a>
+        &rsaquo; Detalle de venta
+    </div>
+
+{% endblock %}
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+    <h1 style="text-align:center; color: black">Factura de Venta Nro. {{ object.numero_de_factura }}
+
+        {% if object.estado == 'ANU' %} <span class="label" style="background-color: #f44336;">ANULADA</span>
+        {% elif object.estado == 'PEN' %} <span class="label" style="background-color: #2196F3;">PENDIENTE</span>
+        {% elif object.estado == 'CON' %} <span class="label" style="background-color: #4CAF50;">CONFIRMADA</span>
+        {% endif %}</h1>
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos de la factura</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> Fecha de emisión </th>
+                    <td> {{ object.fecha_de_emision }} </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Condición de venta </th>
+                    <td> {{ object.get_condicion_de_venta_display }} </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Cliente </th>
+                    <td> {{ object.cliente }} </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"> Iva </th>
+                    <td> {{ object.get_iva_display }} </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    {% if remisiones %}
+        <caption><h2 style="text-align:center">Remisiones en factura</h2></caption>
+        <div class="w3-card-4" style="width:90%;margin-left:auto;margin-right:auto;">
+            <table style="width: 100%">
+                <tr style="background-color: #f1f1f1">
+                    <th>Remisiones</th>
+                    {% for producto in lista_de_productos %}
+                        {% for detalle_de_venta in detalles_con_productos_diferentes %}
+                            {% if detalle_de_venta.producto.pk == producto.pk %}
+                                <th>{{ producto }}</th>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+
+                {% for remision in remisiones %}
+                    <tr>
+                        <td>
+                            <a href="/admin/remisiones/remision_detail/{{ remision.remision.pk }}">{{ remision.remision.numero_de_remision }}</a>
+                        </td>
+                        {% for detalle_de_venta in detalles_con_productos_diferentes %}
+                            <td>
+                                {% for detalle_de_remision in detalles_de_remisiones %}
+                                    {% if detalle_de_venta.producto == detalle_de_remision.producto and detalle_de_remision.remision == remision.remision %}
+                                        {{ detalle_de_remision.cantidad }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    {% endif %}
+    <caption><h2 style="text-align:center">Detalle de la Factura</h2></caption>
+    <div class="w3-card-4" style="width:90%;margin-left:auto;margin-right:auto;">
+        <table style="width: 100%">
+            <tr style="background-color: #f1f1f1">
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                <th>Precio Unit.</th>
+                <th>Subtotal</th>
+            </tr>
+
+            {% for detalle in detalles %}
+            <tr>
+                <td>{{ detalle.cantidad|floatformat:"0"|default_if_none:"&nbsp;" }}</td>
+                <td>{{ detalle.producto }}</td>
+                <td>{{ detalle.precio_unitario|floatformat:"0"|default_if_none:"&nbsp;" }}</td>
+                <td>{{ detalle.subtotal|floatformat:"0"|default_if_none:"&nbsp;" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <caption><h3 style="text-align:right; padding-right: 15%">Total: {{ object.total|floatformat:"0"|default_if_none:"&nbsp;" }}</h3></caption>
+    <button type="button" class="btn btn-primary" onclick="window.history.back(); return false;">Volver</button>
+
+{% endblock %}

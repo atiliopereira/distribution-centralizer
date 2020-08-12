@@ -11,7 +11,7 @@ class ClienteTest(TestCase):
     def test_cliente_creacion(self):
         c = self.crear_cliente()
         self.assertTrue(isinstance(c, Cliente))
-        self.assertEqual(c.__str__(), c.razon_social)
+        self.assertEqual(c.__str__(), f'{c.razon_social} (RUC: {c.ruc})')
 
 
 class PuntoEntregaClienteTest(TestCase):

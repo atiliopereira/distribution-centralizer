@@ -1,9 +1,32 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.template import RequestContext
+from django.views.generic import DetailView
 
+from productos.models import Producto
+from remisiones.models import Remision, DetalleDeRemision
 from sistema.constants import EstadoDocumento
-from ventas.models import Venta, RemisionEnVenta
+from ventas.models import Venta, RemisionEnVenta, DetalleDeVenta
+
+
+class VentaDetailView(DetailView):
+    model = Venta
+    template_name = "admin/ventas/venta/venta_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(VentaDetailView, self).get_context_data(**kwargs)
+        context['detalles'] = DetalleDeVenta.objects.filter(venta=self.object).order_by('producto_id')
+        context['remisiones'] = RemisionEnVenta.objects.filter(venta=self.object)
+        context['detalles_con_productos_diferentes'] = DetalleDeVenta.objects.filter(venta=self.object).distinct('producto').order_by('producto_id')
+        context['lista_de_productos'] = Producto.objects.filter(activo=True).order_by('id')
+        remisiones = Remision.objects.filter(pk__in=[i.remision_id for i in RemisionEnVenta.objects.filter(venta=self.object)])
+        detalles_de_remisiones = []
+        for remision in remisiones:
+            lista = DetalleDeRemision.objects.filter(remision=remision)
+            for elemento in lista:
+                detalles_de_remisiones.append(elemento)
+        context['detalles_de_remisiones'] = detalles_de_remisiones
+        return context
 
 
 def get_ventas_queryset(request, form):

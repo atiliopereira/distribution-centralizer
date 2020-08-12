@@ -33,7 +33,7 @@
             border-radius: 5px;
         }
     </style>
-    <h1 style="text-align:center">Nota de {{ object }}
+    <h1 style="text-align:center; color: black">Nota de {{ object }}
 
         {% if object.estado == 'ANU' %} <span class="label" style="background-color: #f44336;">ANULADA</span>
         {% elif object.estado == 'PEN' %} <span class="label" style="background-color: #2196F3;">PENDIENTE</span>
@@ -47,12 +47,12 @@
           <table>
               <tbody>
                 <tr>
-                    <th scope="row"> Numero de remision</th>
+                    <th scope="row"> Número de remisión</th>
                     <td> {{ object.numero_de_remision }} </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"> Fecha de emision </th>
+                    <th scope="row"> Fecha de emisión </th>
                     <td> {{ object.fecha_de_emision }} </td>
                 </tr>
               </tbody>

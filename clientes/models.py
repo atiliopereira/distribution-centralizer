@@ -14,7 +14,7 @@ class Cliente(models.Model):
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.razon_social
+        return f'{self.razon_social} (RUC: {self.ruc})'
 
 
 class PuntoEntregaCliente(models.Model):
