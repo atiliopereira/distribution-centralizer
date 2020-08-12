@@ -1,14 +1,23 @@
 from django.contrib import admin
 from django.contrib.admin import register
 
-from sistema.models import Ciudad, Vehiculo, Cargo, Funcionario, UnidadDeMedida
+from sistema.models import Ciudad, Vehiculo, Cargo, Funcionario, UnidadDeMedida, Departamento, Local
+
+
+@register(Departamento)
+class DepartamentoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', )
+    ordering = ('nombre', )
+    search_fields = ('nombre', )
+    actions = None
 
 
 @register(Ciudad)
 class CiudadAdmin(admin.ModelAdmin):
-    list_display = ('nombre', )
+    list_display = ('nombre', 'departamento',)
     ordering = ('nombre', )
     search_fields = ('nombre', )
+    list_filter = ('departamento', )
     actions = None
 
 
@@ -39,4 +48,12 @@ class FuncionarioAdmin(admin.ModelAdmin):
 class UnidadDeMedidaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'simbolo')
     search_fields = ('nombre', )
+    actions = None
+
+
+@register(Local)
+class LocalAdmin(admin.ModelAdmin):
+    list_display = ('referencia', 'direccion', 'ciudad', 'departamento',)
+    search_fields = ('referencia', 'direccion', )
+    list_filter = ('ciudad', 'departamento')
     actions = None

@@ -3,6 +3,8 @@ from django.apps import apps
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from sistema.models import Ciudad, Departamento
+
 
 class Cliente(models.Model):
     razon_social = models.CharField(max_length=150, verbose_name="razón social")
@@ -41,6 +43,8 @@ class PuntoEntregaCliente(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     referencia = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200, blank=True, verbose_name="dirección")
+    ciudad = models.ForeignKey(Ciudad, null=True, blank=True, on_delete=models.PROTECT)
+    departamento = models.ForeignKey(Departamento, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return f'{self.cliente}: {self.referencia}'
