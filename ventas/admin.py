@@ -18,14 +18,22 @@ class VentaAdmin(admin.ModelAdmin):
         js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js', )
 
     form = VentaForm
-    list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado', 'total', 'anular')
+    list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado',
+                    'total', 'ver', 'anular', )
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
     actions = None
 
     def editar(self, obj):
-        html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        if obj.estado == EstadoDocumento.PENDIENTE:
+            html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        else:
+            html = ''
+        return mark_safe(html)
+
+    def ver(self, obj):
+        html = '<a href="/admin/ventas/venta_detail/%s" class="icon-block"> <i class="fa fa-eye"></i></a>' % obj.pk
         return mark_safe(html)
 
     def anular(self, obj):

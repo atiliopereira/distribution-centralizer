@@ -18,7 +18,8 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'chofer', 'vehiculo', 'estado', 'fecha_de_facturacion', 'ver', 'anular', )
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'chofer', 'vehiculo', 'estado',
+                    'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )
     autocomplete_fields = ('cliente', 'ciudad_de_partida', 'ciudad_de_llegada', 'vehiculo', 'chofer', )
