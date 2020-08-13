@@ -5,10 +5,20 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Departamento(models.Model):
+    class Meta:
+        verbose_name_plural = "Departamentos"
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.nombre}'
+
+
 class Ciudad(models.Model):
     class Meta:
         verbose_name_plural = "Ciudades"
     nombre = models.CharField(max_length=100)
+    departamento = models.ForeignKey(Departamento, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return f'{self.nombre}'
@@ -62,3 +72,17 @@ class UnidadDeMedida(models.Model):
 
     def __str__(self):
         return f'{self.nombre} ({self.simbolo})'
+
+
+class Local(models.Model):
+    class Meta:
+        verbose_name = "Local"
+        verbose_name_plural = "Locales"
+
+    referencia = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200, blank=True, verbose_name="dirección")
+    ciudad = models.ForeignKey(Ciudad, null=True, blank=True, on_delete=models.PROTECT)
+    departamento = models.ForeignKey(Departamento, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f'{self.referencia}'

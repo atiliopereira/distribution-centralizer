@@ -18,11 +18,11 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'chofer', 'vehiculo', 'estado',
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'punto_de_entrega', 'chofer', 'vehiculo', 'estado',
                     'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )
-    autocomplete_fields = ('cliente', 'ciudad_de_partida', 'ciudad_de_llegada', 'vehiculo', 'chofer', )
+    autocomplete_fields = ('cliente', 'punto_de_partida', 'ciudad_de_partida', 'punto_de_entrega', 'ciudad_de_llegada', 'vehiculo', 'chofer', )
     actions = ('crear_factura_action', )
     fieldsets = (
         (None, {
@@ -39,10 +39,8 @@ class RemisionAdmin(admin.ModelAdmin):
                 ('numero_de_comprobante_de_venta', 'numero_de_timbrado'),
                 'fecha_de_expedicion',
                 ('fecha_de_inicio_del_traslado', 'fecha_estimada_de_termino_del_traslado'),
-                'direccion_del_punto_de_partida',
-                ('ciudad_de_partida', 'departamento_de_partida'),
-                'direccion_del_punto_de_llegada',
-                ('ciudad_de_llegada', 'departamento_de_llegada'),
+                'punto_de_partida',
+                'punto_de_entrega',
                 'kilometros_estimados_de_recorrido',
                 'cambio_de_fecha_de_termino_del_traslado_o_punto_de_llegada',
                 'motivo',
