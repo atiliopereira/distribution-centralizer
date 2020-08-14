@@ -34,7 +34,6 @@ class VentaForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(VentaForm, self).clean()
         total = cleaned_data.get("total")
-        print(total)
         if total == 0:
             msg = "Total no puede ser cero."
             self.add_error('total', msg)

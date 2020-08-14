@@ -69,7 +69,9 @@
               <tbody>
                 <tr>
                     <th scope="row"> Cliente </th>
-                        <td> {{ object.cliente }} </td>
+                        <td>
+                            <a href="/admin/clientes/cliente_detail/{{ object.cliente.pk }}">{{ object.cliente }}</a>
+                        </td>
                 </tr>
               </tbody>
           </table>

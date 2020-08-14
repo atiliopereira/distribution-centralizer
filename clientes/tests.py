@@ -23,5 +23,5 @@ class PuntoEntregaClienteTest(TestCase):
     def test_punto_creacion(self):
         p = self.crear_punto()
         self.assertTrue(isinstance(p, PuntoEntregaCliente))
-        self.assertEqual(p.__str__(), f'{p.cliente}: {p.referencia}')
+        self.assertEqual(p.__str__(), f'{p.referencia}')
 

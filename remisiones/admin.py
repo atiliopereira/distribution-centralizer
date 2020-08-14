@@ -18,7 +18,7 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'punto_de_entrega', 'chofer', 'vehiculo', 'estado',
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'punto_de_entrega', 'estado',
                     'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )

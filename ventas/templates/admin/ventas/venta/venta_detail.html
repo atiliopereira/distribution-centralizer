@@ -37,7 +37,7 @@
 
         {% if object.estado == 'ANU' %} <span class="label" style="background-color: #f44336;">ANULADA</span>
         {% elif object.estado == 'PEN' %} <span class="label" style="background-color: #2196F3;">PENDIENTE</span>
-        {% elif object.estado == 'CON' %} <span class="label" style="background-color: #4CAF50;">CONFIRMADA</span>
+        {% elif object.estado == 'CON' %} <span class="label" style="background-color: #4CAF50;">PAGADA</span>
         {% endif %}</h1>
     <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
         <header class="w3-container w3-light-grey">
@@ -58,7 +58,9 @@
 
                 <tr>
                     <th scope="row"> Cliente </th>
-                    <td> {{ object.cliente }} </td>
+                    <td>
+                        <a href="/admin/clientes/cliente_detail/{{ object.cliente.pk }}">{{ object.cliente }}</a>
+                    </td>
                 </tr>
 
                 <tr>

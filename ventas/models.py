@@ -35,6 +35,12 @@ class Venta(models.Model):
             suma += detalle.subtotal
         return suma
 
+    @property
+    def tiene_remisiones(self):
+        remisiones_en_venta = RemisionEnVenta.objects.filter(venta=self).count()
+        print(remisiones_en_venta)
+        return remisiones_en_venta
+
     def save(self, *args, **kwargs):
         if self.pk:
             self.total = self.get_total()
