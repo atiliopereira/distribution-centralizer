@@ -15,18 +15,19 @@ class DetalleDeVentaInlineAdmin(admin.TabularInline):
 
 class VentaAdmin(admin.ModelAdmin):
     class Media:
-        js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js', )
+        js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js',)
 
     form = VentaForm
     list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'estado',
-                    'total', 'acciones', 'ver', 'anular', )
+                    'total', 'acciones', 'ver', 'anular',)
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
     actions = None
 
     def editar(self, obj):
-        if obj.estado == EstadoDocumento.PENDIENTE:
+
+        if obj.estado == EstadoDocumento.PENDIENTE and obj.tiene_remisiones == 0:
             html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
         else:
             html = ''

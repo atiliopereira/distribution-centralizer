@@ -3,6 +3,7 @@ from django.apps import apps
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from sistema.constants import EstadoDocumento
 from sistema.models import Ciudad, Departamento
 
 
@@ -20,7 +21,7 @@ class Cliente(models.Model):
         return f'{self.razon_social} (RUC: {self.ruc})'
 
     def get_deuda(self):
-        facturas = apps.get_model("ventas", "Venta").objects.filter(cliente_id=self.id).exclude(estado='ANU')
+        facturas = apps.get_model("ventas", "Venta").objects.filter(cliente_id=self.id).filter(estado=EstadoDocumento.PENDIENTE)
         total = 0
         for factura in facturas:
             total += factura.total
@@ -47,4 +48,4 @@ class PuntoEntregaCliente(models.Model):
     departamento = models.ForeignKey(Departamento, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.cliente}: {self.referencia}'
+        return f'{self.referencia}'

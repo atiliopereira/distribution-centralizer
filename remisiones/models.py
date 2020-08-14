@@ -12,8 +12,8 @@ from sistema.models import Vehiculo, Ciudad, Funcionario, UnidadDeMedida, Local
 
 class Remision(models.Model):
     class Meta:
-        verbose_name = "Remisión"
-        verbose_name_plural = "Remisiones"
+        verbose_name = "Nota de remisión"
+        verbose_name_plural = "Notas de remisión"
 
     # datos de la remision
     numero_de_remision = models.CharField(max_length=30)
@@ -32,13 +32,13 @@ class Remision(models.Model):
     fecha_de_inicio_del_traslado = models.DateField(default=datetime.date.today, blank=True, null=True)
     fecha_estimada_de_termino_del_traslado = models.DateField(default=datetime.date.today, blank=True, null=True)
 
-    punto_de_partida = models.ForeignKey(Local, on_delete=models.PROTECT)
+    punto_de_partida = models.ForeignKey(Local, on_delete=models.PROTECT, blank=True, null=True)
     direccion_del_punto_de_partida = models.CharField(max_length=200, blank=True, null=True)
     ciudad_de_partida = models.ForeignKey(Ciudad, blank=True, null=True, on_delete=models.PROTECT,
                                           related_name="ciudad_de_partida")
     departamento_de_partida = models.CharField(max_length=100, blank=True, null=True)
 
-    punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, on_delete=models.PROTECT)
+    punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, on_delete=models.PROTECT, blank=True, null=True)
     direccion_del_punto_de_llegada = models.CharField(max_length=200, blank=True, null=True)
     ciudad_de_llegada = models.ForeignKey(Ciudad, blank=True, null=True, on_delete=models.PROTECT,
                                           related_name='ciudad_de_llegada')
@@ -65,21 +65,28 @@ class Remision(models.Model):
     def save(self, *args, **kwargs):
         if self.estado == EstadoDocumento.PENDIENTE:
             self.fecha_de_facturacion = self.get_fecha_de_facturacion()
-        if self.punto_de_partida:
-            if self.punto_de_partida.direccion:
-                self.direccion_del_punto_de_partida = self.punto_de_partida.direccion
-            if self.punto_de_partida.ciudad:
-                self.ciudad_de_partida = self.punto_de_partida.ciudad
-            if self.punto_de_partida.departamento:
-                self.departamento_de_partida = self.punto_de_partida.departamento.nombre
+        try:
+            if self.punto_de_partida:
+                if self.punto_de_partida.direccion:
+                    self.direccion_del_punto_de_partida = self.punto_de_partida.direccion
+                if self.punto_de_partida.ciudad:
+                    self.ciudad_de_partida = self.punto_de_partida.ciudad
+                if self.punto_de_partida.departamento:
+                    self.departamento_de_partida = self.punto_de_partida.departamento.nombre
 
-        if self.punto_de_entrega:
-            if self.punto_de_entrega.direccion:
-                self.direccion_del_punto_de_llegada = self.punto_de_entrega.direccion
-            if self.punto_de_entrega.ciudad:
-                self.ciudad_de_llegada = self.punto_de_entrega.ciudad
-            if self.punto_de_entrega.departamento:
-                self.departamento_de_llegada = self.punto_de_entrega.departamento.nombre
+        except Exception as e:
+            print(e)
+
+        try:
+            if self.punto_de_entrega:
+                if self.punto_de_entrega.direccion:
+                    self.direccion_del_punto_de_llegada = self.punto_de_entrega.direccion
+                if self.punto_de_entrega.ciudad:
+                    self.ciudad_de_llegada = self.punto_de_entrega.ciudad
+                if self.punto_de_entrega.departamento:
+                    self.departamento_de_llegada = self.punto_de_entrega.departamento.nombre
+        except Exception as e:
+            print(e)
 
         super(Remision, self).save(*args, **kwargs)
 
