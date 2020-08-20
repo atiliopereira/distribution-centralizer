@@ -53,7 +53,7 @@ class UnidadDeMedidaAdmin(admin.ModelAdmin):
 
 @register(Local)
 class LocalAdmin(admin.ModelAdmin):
-    list_display = ('referencia', 'direccion', 'ciudad', 'departamento',)
+    list_display = ('referencia', 'direccion', 'ciudad', )
     search_fields = ('referencia', 'direccion', )
-    list_filter = ('ciudad', 'departamento')
+    list_filter = ('ciudad', 'ciudad__departamento')
     actions = None

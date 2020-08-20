@@ -16,12 +16,12 @@ class ClienteTest(TestCase):
 
 class PuntoEntregaClienteTest(TestCase):
 
-    def crear_punto(self, referencia="Caño oxígeno"):
+    def crear_punto(self, direccion="Avda. casi Calle 1234", referencia="Caño oxígeno"):
         cliente = Cliente.objects.create(razon_social="Cliente Prueba", ruc="80000000-0")
-        return PuntoEntregaCliente.objects.create(cliente=cliente, referencia=referencia)
+        return PuntoEntregaCliente.objects.create(cliente=cliente, direccion=direccion, referencia=referencia)
 
     def test_punto_creacion(self):
         p = self.crear_punto()
         self.assertTrue(isinstance(p, PuntoEntregaCliente))
-        self.assertEqual(p.__str__(), f'{p.referencia}')
+        self.assertEqual(p.__str__(), f'{p.cliente.razon_social}: {p.direccion} ({p.referencia})')
 
