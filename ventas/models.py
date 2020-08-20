@@ -3,7 +3,7 @@ import datetime
 
 from django.db import models
 
-from clientes.models import Cliente
+from clientes.models import Cliente, PuntoEntregaCliente
 from remisiones.models import Remision, DetalleDeRemision
 from ventas.constants import CondicionDeVenta, Iva
 from productos.models import Producto, ProductoCliente, get_precio
@@ -20,10 +20,12 @@ class Venta(models.Model):
     condicion_de_venta = models.CharField(max_length=3, choices=CondicionDeVenta.CONDICIONES,
                                           default=CondicionDeVenta.CONTADO, verbose_name='Condición de venta')
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
+    punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, null=True, blank=True,
+                                  verbose_name="Dirección del punto de entrega", on_delete=models.PROTECT)
     iva = models.CharField(max_length=2, choices=Iva.PORCENTAJES, default=Iva.DIEZ)
     estado = models.CharField(max_length=3, choices=EstadoDocumento.ESTADOS,
                               default=EstadoDocumento.PENDIENTE, editable=False)
-    total = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=15, decimal_places=0, default=0)
 
     def __str__(self):
         return f'Factura Venta {self.get_condicion_de_venta_display()} nro: {self.numero_de_factura} ({self.cliente})'
@@ -38,7 +40,6 @@ class Venta(models.Model):
     @property
     def tiene_remisiones(self):
         remisiones_en_venta = RemisionEnVenta.objects.filter(venta=self).count()
-        print(remisiones_en_venta)
         return remisiones_en_venta
 
     def save(self, *args, **kwargs):

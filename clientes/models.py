@@ -30,7 +30,7 @@ class Cliente(models.Model):
     get_deuda.short_description = 'Deuda a la fecha'
 
     def get_remisiones_pendientes(self):
-        remisiones = apps.get_model("remisiones", "remision").objects.filter(cliente_id=self.id).filter(estado='PEN')
+        remisiones = apps.get_model("remisiones", "remision").objects.filter(destino__cliente_id=self.id).filter(estado=EstadoDocumento.PENDIENTE)
         return remisiones.count()
 
     get_remisiones_pendientes.short_description = 'Remisiones pendientes de facturación'
@@ -43,9 +43,8 @@ class PuntoEntregaCliente(models.Model):
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     referencia = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=200, blank=True, verbose_name="dirección")
+    direccion = models.CharField(max_length=200, verbose_name="dirección")
     ciudad = models.ForeignKey(Ciudad, null=True, blank=True, on_delete=models.PROTECT)
-    departamento = models.ForeignKey(Departamento, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f'{self.referencia}'
+        return f'{self.cliente.razon_social}: {self.direccion} ({self.referencia})'

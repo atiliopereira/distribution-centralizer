@@ -3,11 +3,13 @@
 {% block custom_search_form %}
     <strong>{{ asf.numero.label }}:</strong> &nbsp;&nbsp;
         {{ asf.numero }} &nbsp;&nbsp;
-            <strong>{{ asf.cliente.label }}:</strong> &nbsp;&nbsp;
-            {{ asf.cliente }}
-            <br><br>
-         <strong>{{ asf.desde.label }}:</strong> &nbsp;&nbsp;
-            {{ asf.desde }}
-         <strong>{{ asf.hasta.label }}:</strong> &nbsp;&nbsp;
-            {{ asf.hasta }}
+    <strong>{{ asf.cliente.label }}:</strong> &nbsp;&nbsp;
+        {{ asf.cliente }}
+    <strong>{{ asf.punto_de_entrega.label }}:</strong> &nbsp;&nbsp;
+        {{ asf.punto_de_entrega }}
+    <br><br>
+    <strong>{{ asf.desde.label }}:</strong> &nbsp;&nbsp;
+        {{ asf.desde }}
+    <strong>{{ asf.hasta.label }}:</strong> &nbsp;&nbsp;
+        {{ asf.hasta }}
 {% endblock %}

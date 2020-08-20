@@ -6,16 +6,17 @@ from clientes.models import Cliente, PuntoEntregaCliente
 
 class PuntoEntregaClienteAdmin(admin.ModelAdmin):
     search_fields = ('referencia', 'direccion', 'cliente__razon_social',)
-    list_display = ('referencia', 'direccion', 'cliente', 'ciudad', 'departamento',)
-    list_filter = ('ciudad', 'departamento', )
+    list_display = ('referencia', 'direccion', 'cliente', 'ciudad',)
+    list_filter = ('ciudad', 'ciudad__departamento', )
     actions = None
+
 
 admin.site.register(PuntoEntregaCliente, PuntoEntregaClienteAdmin)
 
 
 class PuntoEntregaClienteInline(admin.TabularInline):
     model = PuntoEntregaCliente
-    autocomplete_fields = ('ciudad', 'departamento', )
+    autocomplete_fields = ('ciudad', )
     extra = 0
 
 

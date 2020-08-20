@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.views.generic import DetailView
+from django.db.models import Q
 
 from remisiones.models import Remision, DetalleDeRemision
 from sistema.constants import EstadoDocumento
@@ -25,7 +26,10 @@ def get_remisiones_queryset(request, form):
     if form.cleaned_data.get('numero', ''):
         qs = qs.filter(numero_de_remision__icontains=form.cleaned_data['numero'])
     if form.cleaned_data.get('cliente', ''):
-        qs = qs.filter(cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
+        qs = qs.filter(destino__cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
+    if form.cleaned_data.get('punto_de_entrega', ''):
+        qs = qs.filter(Q(destino__referencia__icontains=form.cleaned_data.get('punto_de_entrega', '')) | Q(
+            destino__direccion__icontains=form.cleaned_data.get('punto_de_entrega', '')))
     if form.cleaned_data.get('desde', ''):
         qs = qs.filter(fecha_de_emision__gte=form.cleaned_data.get('desde', ''))
     if form.cleaned_data.get('hasta', ''):

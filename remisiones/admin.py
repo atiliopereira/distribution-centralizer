@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+from django.db import models
+from django.forms import Select
 from django.utils.safestring import mark_safe
 from django.contrib import messages
 
-from remisiones.forms import RemisionSearchForm
+from remisiones.forms import RemisionSearchForm, RemisionForm
 from remisiones.models import DetalleDeRemision, Remision
 from remisiones.views import get_remisiones_queryset
 from sistema.constants import EstadoDocumento
@@ -18,19 +20,20 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'cliente', 'punto_de_entrega', 'estado',
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'destino', 'estado',
                     'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )
-    autocomplete_fields = ('cliente', 'punto_de_partida', 'ciudad_de_partida', 'punto_de_entrega', 'ciudad_de_llegada', 'vehiculo', 'chofer', )
+    autocomplete_fields = ('destino', 'punto_de_partida', 'vehiculo', 'chofer', )
     actions = ('crear_factura_action', )
+    form = RemisionForm
     fieldsets = (
         (None, {
             'fields': ('numero_de_remision', 'fecha_de_emision', )
         }),
 
         ('DESTINATARIO DE LA MERCADERIA', {
-            'fields': ('cliente', )
+            'fields': ('destino', )
         }),
 
         ('DATOS DEL TRASLADO', {
@@ -40,7 +43,6 @@ class RemisionAdmin(admin.ModelAdmin):
                 'fecha_de_expedicion',
                 ('fecha_de_inicio_del_traslado', 'fecha_estimada_de_termino_del_traslado'),
                 'punto_de_partida',
-                'punto_de_entrega',
                 'kilometros_estimados_de_recorrido',
                 'cambio_de_fecha_de_termino_del_traslado_o_punto_de_llegada',
                 'motivo',
@@ -82,10 +84,10 @@ class RemisionAdmin(admin.ModelAdmin):
         return mark_safe(html)
 
     def crear_factura_action(self, request, queryset):
-        if all(queryset[0].cliente.razon_social == remision.cliente.razon_social and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
+        if all(queryset[0].destino == remision.destino and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
             try:
                 venta = Venta.objects.create(numero_de_factura='000-000-0000000', condicion_de_venta=CondicionDeVenta.CREDITO,
-                                             cliente=queryset[0].cliente, estado=EstadoDocumento.PENDIENTE)
+                                             cliente=queryset[0].destino.cliente, punto_de_entrega=queryset[0].destino, estado=EstadoDocumento.PENDIENTE)
                 for remision in queryset:
                     RemisionEnVenta.objects.create(venta=venta, remision=remision)
 
