@@ -21,7 +21,7 @@ class Venta(models.Model):
                                           default=CondicionDeVenta.CONTADO, verbose_name='Condición de venta')
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, null=True, blank=True,
-                                  verbose_name="Dirección del punto de entrega", on_delete=models.PROTECT)
+                                  verbose_name="Dirección del punto de entrega", on_delete=models.PROTECT, editable=False)
     iva = models.CharField(max_length=2, choices=Iva.PORCENTAJES, default=Iva.DIEZ)
     estado = models.CharField(max_length=3, choices=EstadoDocumento.ESTADOS,
                               default=EstadoDocumento.PENDIENTE, editable=False)
