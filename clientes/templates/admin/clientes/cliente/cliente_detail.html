@@ -1,0 +1,128 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="{% url 'admin:app_list' 'clientes' %}">Clientes</a>
+        &rsaquo; <a href="/admin/clientes/cliente">Lista de clientes</a>
+        &rsaquo; Detalle de cliente
+    </div>
+
+{% endblock %}
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+    <h1 style="text-align:center; color: black">{{ object.razon_social }}
+        {% if object.activo %} <span class="label" style="background-color: #4CAF50;">ACTIVO</span>
+        {% else %} <span class="label" style="background-color: #f44336;">INACTIVO</span>
+        {% endif %}</h1>
+    <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+        <header class="w3-container w3-light-grey">
+          <h4>Datos del cliente</h4>
+        </header>
+        <div class="w3-container">
+          <table>
+              <tbody>
+                <tr>
+                    <th scope="row"> RUC </th>
+                    <td> {{ object.ruc }} </td>
+                </tr>
+                <tr>
+                    <th scope="row"> Dirección </th>
+                    <td>
+                        {% if object.direccion %}
+                            {{ object.direccion }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"> Teléfono </th>
+                    <td>
+                        {% if object.telefono %}
+                            {{ object.telefono }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"> E-mail </th>
+                    <td>
+                        {% if object.email %}
+                            {{ object.email }}
+                        {% else %}
+                         -
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"> Día de presentación de facturas </th>
+                    <td>
+                        {{ object.dia_de_presentacion }} de cada mes
+                    </td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+    </div>
+
+    {% if ventas %}
+        <caption><h4 style="text-align:center">FACTURAS PENDIENTES DE COBRO</h4></caption>
+        {% for punto in puntos %}
+            <caption><h6 style="text-align:left; padding-left:20%">{{ punto.direccion }} ({{ punto.referencia }})</h6></caption>
+            <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+                <table style="width: 100%">
+                    <tr style="background-color: #f1f1f1">
+                        <th>Fecha</th>
+                        <th>Número de Factura</th>
+                        <th>Monto</th>
+                    </tr>
+
+                    {% for venta in ventas %}
+                        {% if punto.pk == venta.punto_de_entrega.pk %}
+                            <tr>
+                                <td>
+                                    {{ venta.fecha_de_emision }}
+                                </td>
+                                <td>
+                                    <a href="/admin/ventas/venta_detail/{{ venta.pk }}">{{ venta.numero_de_factura }}</a>
+                                </td>
+                                <td>
+                                    {{ venta.total|floatformat:"0"|default_if_none:"&nbsp;" }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <p style="text-align:right; padding-right:20%; font-weight: bold">Subtotal: {{ punto.get_deuda_punto }}</p>
+        {% endfor %}
+
+        <caption><h3 style="text-align:right; padding-right: 18%">Total Deuda: {{ object.get_deuda|floatformat:"0"|default_if_none:"&nbsp;" }}</h3></caption>
+    {% endif %}
+    <button type="button" class="btn btn-primary" onclick="window.history.back(); return false;">Volver</button>
+
+{% endblock %}
