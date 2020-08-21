@@ -45,6 +45,7 @@ def lista_ventas(request):
         lista_datos.append([
             venta.fecha_de_emision.strftime("%d/%m/%Y"),
             venta.cliente.razon_social,
+            venta.get_direccion(),
             condicion,
             estado,
             separar(int(venta.total)),
@@ -54,6 +55,6 @@ def lista_ventas(request):
     lista_datos.append(['', '', '', 'Total', separar(int(total)),])
     lista_datos.append([])
     lista_datos.append(['Desde: ', desde, 'Hasta: ', hasta])
-    titulos = ['Fecha', 'Cliente', 'Condición', 'Estado', 'Monto', 'Remisiones']
+    titulos = ['Fecha', 'Cliente', 'Dirección', 'Condición', 'Estado', 'Monto', 'Remisiones']
     response = listview_to_excel(lista_datos, nombre_archivo, titulos)
     return response

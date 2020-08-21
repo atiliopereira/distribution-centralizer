@@ -26,10 +26,10 @@ def get_remisiones_queryset(request, form):
     if form.cleaned_data.get('numero', ''):
         qs = qs.filter(numero_de_remision__icontains=form.cleaned_data['numero'])
     if form.cleaned_data.get('cliente', ''):
-        qs = qs.filter(destino__cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
+        qs = qs.filter(punto_de_entrega__cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
     if form.cleaned_data.get('punto_de_entrega', ''):
-        qs = qs.filter(Q(destino__referencia__icontains=form.cleaned_data.get('punto_de_entrega', '')) | Q(
-            destino__direccion__icontains=form.cleaned_data.get('punto_de_entrega', '')))
+        qs = qs.filter(Q(punto_de_entrega__referencia__icontains=form.cleaned_data.get('punto_de_entrega', '')) | Q(
+            punto_de_entrega__direccion__icontains=form.cleaned_data.get('punto_de_entrega', '')))
     if form.cleaned_data.get('desde', ''):
         qs = qs.filter(fecha_de_emision__gte=form.cleaned_data.get('desde', ''))
     if form.cleaned_data.get('hasta', ''):
