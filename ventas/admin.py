@@ -27,7 +27,7 @@ class VentaAdmin(admin.ModelAdmin):
 
     def editar(self, obj):
 
-        if obj.estado == EstadoDocumento.PENDIENTE and obj.tiene_remisiones == 0:
+        if obj.estado == EstadoDocumento.PENDIENTE:
             html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
         else:
             html = ''
