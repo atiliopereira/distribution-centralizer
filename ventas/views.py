@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.views.generic import DetailView
+from django.db.models import Q
 
 from productos.models import Producto
 from remisiones.models import Remision, DetalleDeRemision
@@ -39,11 +40,14 @@ def get_ventas_queryset(request, form):
         qs = qs.filter(condicion_de_venta__exact=condicion_de_venta)
     if form.cleaned_data.get('numero', ''):
         qs = qs.filter(numero_de_factura__icontains=form.cleaned_data['numero'])
-    if form.cleaned_data.get('cliente', ''):
-        qs = qs.filter(cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
     if form.cleaned_data.get('remision', ''):
         qs = qs.filter(pk__in=[i.venta_id for i in RemisionEnVenta.objects.filter(
             remision__numero_de_remision__icontains=form.cleaned_data['remision'])])
+    if form.cleaned_data.get('cliente', ''):
+        qs = qs.filter(cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
+    if form.cleaned_data.get('punto_de_entrega', ''):
+        qs = qs.filter(Q(punto_de_entrega__referencia__icontains=form.cleaned_data.get('punto_de_entrega', '')) | Q(
+            punto_de_entrega__direccion__icontains=form.cleaned_data.get('punto_de_entrega', '')))
     if form.cleaned_data.get('desde', ''):
         qs = qs.filter(fecha_de_emision__gte=form.cleaned_data.get('desde', ''))
     if form.cleaned_data.get('hasta', ''):

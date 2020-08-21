@@ -20,7 +20,7 @@ class Remision(models.Model):
     fecha_de_emision = models.DateField(default=datetime.date.today)
 
     # destinatario de la mercaderia
-    destino = models.ForeignKey(PuntoEntregaCliente, on_delete=models.PROTECT)
+    punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, on_delete=models.PROTECT)
 
     # datos del traslado
     motivo_del_traslado = models.CharField(max_length=100, blank=True, null=True)
@@ -75,14 +75,14 @@ class Remision(models.Model):
 
     def get_fecha_de_facturacion(self):
         hoy = datetime.date.today()
-        fecha_vencimiento_mes_actual = datetime.datetime(hoy.year, hoy.month, self.destino.cliente.dia_de_presentacion)
+        fecha_vencimiento_mes_actual = datetime.datetime(hoy.year, hoy.month, self.punto_de_entrega.cliente.dia_de_presentacion)
         fecha_de_facturacion = fecha_vencimiento_mes_actual
         if not self.fecha_de_facturacion:
-            if int(hoy.day) <= int(self.destino.cliente.dia_de_presentacion):
+            if int(hoy.day) <= int(self.punto_de_entrega.cliente.dia_de_presentacion):
                 pass
-            elif int(hoy.day) > int(self.destino.cliente.dia_de_presentacion):
+            elif int(hoy.day) > int(self.punto_de_entrega.cliente.dia_de_presentacion):
                 nextmonth = datetime.date.today() + relativedelta.relativedelta(months=1)
-                fecha_de_facturacion = datetime.datetime(nextmonth.year, nextmonth.month, self.destino.cliente.dia_de_presentacion)
+                fecha_de_facturacion = datetime.datetime(nextmonth.year, nextmonth.month, self.punto_de_entrega.cliente.dia_de_presentacion)
         else:
             fecha_de_facturacion = self.fecha_de_facturacion
         return fecha_de_facturacion

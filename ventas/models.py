@@ -42,6 +42,13 @@ class Venta(models.Model):
         remisiones_en_venta = RemisionEnVenta.objects.filter(venta=self).count()
         return remisiones_en_venta
 
+    def get_direccion(self):
+        direccion = ''
+        if self.punto_de_entrega:
+            direccion = f'{self.punto_de_entrega.direccion} ({self.punto_de_entrega.referencia})'
+        return direccion
+    get_direccion.short_description = 'Dirección'
+
     def save(self, *args, **kwargs):
         if self.pk:
             self.total = self.get_total()

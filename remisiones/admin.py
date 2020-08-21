@@ -20,11 +20,11 @@ class DetalleDeRemisionInlineAdmin(admin.TabularInline):
 
 
 class RemisionAdmin(admin.ModelAdmin):
-    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'destino', 'estado',
+    list_display = ('editar', 'numero_de_remision', 'fecha_de_emision', 'punto_de_entrega', 'estado',
                     'fecha_de_facturacion', 'ver', 'anular', )
     list_filter = ('estado', )
     inlines = (DetalleDeRemisionInlineAdmin, )
-    autocomplete_fields = ('destino', 'punto_de_partida', 'vehiculo', 'chofer', )
+    autocomplete_fields = ('punto_de_entrega', 'punto_de_partida', 'vehiculo', 'chofer', )
     actions = ('crear_factura_action', )
     form = RemisionForm
     fieldsets = (
@@ -33,7 +33,7 @@ class RemisionAdmin(admin.ModelAdmin):
         }),
 
         ('DESTINATARIO DE LA MERCADERIA', {
-            'fields': ('destino', )
+            'fields': ('punto_de_entrega', )
         }),
 
         ('DATOS DEL TRASLADO', {
@@ -84,10 +84,10 @@ class RemisionAdmin(admin.ModelAdmin):
         return mark_safe(html)
 
     def crear_factura_action(self, request, queryset):
-        if all(queryset[0].destino == remision.destino and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
+        if all(queryset[0].punto_de_entrega == remision.punto_de_entrega and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
             try:
                 venta = Venta.objects.create(numero_de_factura='000-000-0000000', condicion_de_venta=CondicionDeVenta.CREDITO,
-                                             cliente=queryset[0].destino.cliente, punto_de_entrega=queryset[0].destino, estado=EstadoDocumento.PENDIENTE)
+                                             cliente=queryset[0].punto_de_entrega.cliente, punto_de_entrega=queryset[0].punto_de_entrega, estado=EstadoDocumento.PENDIENTE)
                 for remision in queryset:
                     RemisionEnVenta.objects.create(venta=venta, remision=remision)
 

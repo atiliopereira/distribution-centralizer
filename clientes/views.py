@@ -16,6 +16,6 @@ class ClienteDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ClienteDetailView, self).get_context_data(**kwargs)
         context['ventas'] = Venta.objects.filter(cliente=self.object).filter(estado__exact=EstadoDocumento.PENDIENTE)
-        context['remisiones'] = Remision.objects.filter(destino__cliente=self.object).filter(estado__exact=EstadoDocumento.PENDIENTE)
+        context['remisiones'] = Remision.objects.filter(punto_de_entrega__cliente=self.object).filter(estado__exact=EstadoDocumento.PENDIENTE)
         context['productos'] = ProductoCliente.objects.filter(cliente=self.object)
         return context

@@ -38,7 +38,7 @@ def lista_remisiones(request):
         linea = [
             remision.fecha_de_emision.strftime("%d/%m/%Y"),
             remision.numero_de_remision,
-            remision.destino.__str__(),
+            remision.punto_de_entrega.__str__(),
             remision.get_estado_display(),
         ]
         linea.extend(cantidades)

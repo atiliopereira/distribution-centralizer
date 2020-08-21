@@ -30,7 +30,7 @@ class Cliente(models.Model):
     get_deuda.short_description = 'Deuda a la fecha'
 
     def get_remisiones_pendientes(self):
-        remisiones = apps.get_model("remisiones", "remision").objects.filter(destino__cliente_id=self.id).filter(estado=EstadoDocumento.PENDIENTE)
+        remisiones = apps.get_model("remisiones", "remision").objects.filter(punto_de_entrega__cliente_id=self.id).filter(estado=EstadoDocumento.PENDIENTE)
         return remisiones.count()
 
     get_remisiones_pendientes.short_description = 'Remisiones pendientes de facturación'

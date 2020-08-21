@@ -22,8 +22,8 @@ class RemisionForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'destino': AutocompleteSelect(
-                Remision._meta.get_field('destino').remote_field,
+            'punto_de_entrega': AutocompleteSelect(
+                Remision._meta.get_field('punto_de_entrega').remote_field,
                 admin.site,
                 attrs={'data-dropdown-auto-width': 'true', 'style': "width: 100%;"}
             ),

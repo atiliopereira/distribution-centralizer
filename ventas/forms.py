@@ -7,10 +7,13 @@ from ventas.models import Venta
 class VentaSearchForm(forms.Form):
     numero = forms.CharField(required=False,
                              widget=forms.TextInput(attrs={'placeholder': 'Numero de factura', 'style': 'width:150px;'}))
-    cliente = forms.CharField(required=False,
-                              widget=forms.TextInput(attrs={'placeholder': 'Cliente', 'style': 'width:220px;'}))
     remision = forms.CharField(required=False, widget=forms.TextInput(
         attrs={'placeholder': 'Numero de remisión', 'style': 'width:150px;'}))
+    cliente = forms.CharField(required=False,
+                              widget=forms.TextInput(attrs={'placeholder': 'Cliente', 'style': 'width:220px;'}))
+    punto_de_entrega = forms.CharField(required=False,
+                                       widget=forms.TextInput(
+                                           attrs={'placeholder': 'Punto de entrega', 'style': 'width:250px;'}))
     desde = forms.DateField(widget=AdminDateWidget(attrs={'placeholder': 'Desde'}), required=False)
     hasta = forms.DateField(widget=AdminDateWidget(attrs={'placeholder': 'Hasta'}), required=False)
 
