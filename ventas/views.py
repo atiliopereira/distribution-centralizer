@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.views.generic import DetailView
@@ -79,6 +81,11 @@ def confirmar_venta(request, pk):
     if request.method == 'POST':
         venta.estado = EstadoDocumento.CONFIRMADO
         venta.save()
+        remisiones_en_venta = RemisionEnVenta.objects.filter(venta=venta)
+        for remision_en_venta in remisiones_en_venta:
+            remision_en_venta.remision.fecha_de_facturacion = datetime.date.today()
+            remision_en_venta.remision.save()
+
         return redirect('/admin/ventas/venta/')
 
     mensaje = f'¿Marcar {venta} como cobrada?'
