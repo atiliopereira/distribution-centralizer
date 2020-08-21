@@ -48,3 +48,10 @@ class PuntoEntregaCliente(models.Model):
 
     def __str__(self):
         return f'{self.cliente.razon_social}: {self.direccion} ({self.referencia})'
+
+    def get_deuda_punto(self):
+        facturas = apps.get_model("ventas", "Venta").objects.filter(punto_de_entrega=self).filter(estado=EstadoDocumento.PENDIENTE)
+        total = 0
+        for factura in facturas:
+            total += factura.total
+        return total

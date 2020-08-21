@@ -91,26 +91,37 @@
 
     {% if ventas %}
         <caption><h4 style="text-align:center">FACTURAS PENDIENTES DE COBRO</h4></caption>
-        <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
-            <table style="width: 100%">
-                <tr style="background-color: #f1f1f1">
-                    <th>Número de Factura</th>
-                    <th>Monto</th>
-                </tr>
-
-                {% for venta in ventas %}
-                    <tr>
-                        <td>
-                            <a href="/admin/ventas/venta_detail/{{ venta.pk }}">{{ venta.numero_de_factura }}</a>
-                        </td>
-                        <td>
-                            {{ venta.total|floatformat:"0"|default_if_none:"&nbsp;" }}
-                        </td>
+        {% for punto in puntos %}
+            <caption><h6 style="text-align:left; padding-left:20%">{{ punto.direccion }} ({{ punto.referencia }})</h6></caption>
+            <div class="w3-card-4" style="width:60%;margin-left:auto;margin-right:auto;">
+                <table style="width: 100%">
+                    <tr style="background-color: #f1f1f1">
+                        <th>Fecha</th>
+                        <th>Número de Factura</th>
+                        <th>Monto</th>
                     </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <caption><h3 style="text-align:right; padding-right: 15%">Total Deuda: {{ object.get_deuda|floatformat:"0"|default_if_none:"&nbsp;" }}</h3></caption>
+
+                    {% for venta in ventas %}
+                        {% if punto.pk == venta.punto_de_entrega.pk %}
+                            <tr>
+                                <td>
+                                    {{ venta.fecha_de_emision }}
+                                </td>
+                                <td>
+                                    <a href="/admin/ventas/venta_detail/{{ venta.pk }}">{{ venta.numero_de_factura }}</a>
+                                </td>
+                                <td>
+                                    {{ venta.total|floatformat:"0"|default_if_none:"&nbsp;" }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            <p style="text-align:right; padding-right:20%; font-weight: bold">Subtotal: {{ punto.get_deuda_punto }}</p>
+        {% endfor %}
+
+        <caption><h3 style="text-align:right; padding-right: 18%">Total Deuda: {{ object.get_deuda|floatformat:"0"|default_if_none:"&nbsp;" }}</h3></caption>
     {% endif %}
     <button type="button" class="btn btn-primary" onclick="window.history.back(); return false;">Volver</button>
 
