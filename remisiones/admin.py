@@ -84,10 +84,20 @@ class RemisionAdmin(admin.ModelAdmin):
         return mark_safe(html)
 
     def crear_factura_action(self, request, queryset):
-        if all(queryset[0].punto_de_entrega == remision.punto_de_entrega and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
+        if all(queryset[0].punto_de_entrega.cliente == remision.punto_de_entrega.cliente and remision.estado == EstadoDocumento.PENDIENTE for remision in queryset):
             try:
-                venta = Venta.objects.create(numero_de_factura='000-000-0000000', condicion_de_venta=CondicionDeVenta.CREDITO,
-                                             cliente=queryset[0].punto_de_entrega.cliente, punto_de_entrega=queryset[0].punto_de_entrega, estado=EstadoDocumento.PENDIENTE)
+                puntos = queryset.order_by('punto_de_entrega').distinct('punto_de_entrega').count()
+                if puntos > 1:
+                    venta = Venta.objects.create(numero_de_factura='000-000-0000000',
+                                                 condicion_de_venta=CondicionDeVenta.CREDITO,
+                                                 cliente=queryset[0].punto_de_entrega.cliente,
+                                                 estado=EstadoDocumento.PENDIENTE)
+                else:
+                    venta = Venta.objects.create(numero_de_factura='000-000-0000000',
+                                                 condicion_de_venta=CondicionDeVenta.CREDITO,
+                                                 cliente=queryset[0].punto_de_entrega.cliente,
+                                                 punto_de_entrega=queryset[0].punto_de_entrega,
+                                                 estado=EstadoDocumento.PENDIENTE)
                 for remision in queryset:
                     RemisionEnVenta.objects.create(venta=venta, remision=remision)
 
