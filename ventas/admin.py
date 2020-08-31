@@ -19,7 +19,7 @@ class VentaAdmin(admin.ModelAdmin):
 
     form = VentaForm
     list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'get_direccion',
-                    'estado', 'total', 'acciones', 'ver', 'anular',)
+                    'estado', 'total', 'acciones', 'ver', 'imprimir', 'anular',)
     list_filter = ('condicion_de_venta', 'estado')
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
@@ -35,6 +35,10 @@ class VentaAdmin(admin.ModelAdmin):
 
     def ver(self, obj):
         html = '<a href="/admin/ventas/venta_detail/%s" class="icon-block"> <i class="fa fa-eye"></i></a>' % obj.pk
+        return mark_safe(html)
+
+    def imprimir(self, obj):
+        html = '<a href="/admin/ventas/generar_factura/%s" class="icon-block"> <i class="fa fa-file-pdf-o" style="color:red; font-size: 1.73em"></i></a>' % obj.pk
         return mark_safe(html)
 
     def anular(self, obj):

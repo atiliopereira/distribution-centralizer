@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from ventas.reports import lista_ventas
+from ventas.reports import lista_ventas, factura_pdf
 from ventas.views import anular_venta, VentaDetailView, confirmar_venta
 
 urlpatterns = [
@@ -8,4 +8,9 @@ urlpatterns = [
     url(r'^anular_venta/(?P<pk>\d+)/$', anular_venta, name='anular_venta'),
     url(r'^confirmar_venta/(?P<pk>\d+)/$', confirmar_venta, name='confirmar_venta'),
     url(r'^lista_ventas/$', lista_ventas, name='lista_ventas'),
+    url(
+        r'^generar_factura/(?P<id>\w+)/$',
+        factura_pdf,
+        name='generar_factura',
+    ),
 ]
