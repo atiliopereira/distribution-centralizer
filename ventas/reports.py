@@ -89,9 +89,16 @@ def factura_pdf(request, id):
             canvas.drawString(572, 851, 'X')
             canvas.drawString(572, 528, 'X')
             canvas.drawString(572, 205, 'X')
-        canvas.drawString(130, 837, force_text(venta.cliente.razon_social or '').upper())
-        canvas.drawString(130, 514, force_text(venta.cliente.razon_social or '').upper())
-        canvas.drawString(130, 191, force_text(venta.cliente.razon_social or '').upper())
+
+        if not venta.punto_de_entrega:
+            canvas.drawString(130, 837, force_text(venta.cliente.razon_social or '').upper())
+            canvas.drawString(130, 514, force_text(venta.cliente.razon_social or '').upper())
+            canvas.drawString(130, 191, force_text(venta.cliente.razon_social or '').upper())
+        else:
+            cliente_y_direccion = f'{venta.cliente.razon_social}   DIRECCIÓN: {venta.punto_de_entrega.direccion}'
+            canvas.drawString(130, 837, force_text(cliente_y_direccion or '').upper())
+            canvas.drawString(130, 514, force_text(cliente_y_direccion or '').upper())
+            canvas.drawString(130, 191, force_text(cliente_y_direccion or '').upper())
         canvas.drawString(51, 823, force_text(venta.cliente.ruc or ''))
         canvas.drawString(51, 500, force_text(venta.cliente.ruc or ''))
         canvas.drawString(51, 177, force_text(venta.cliente.ruc or ''))
