@@ -78,30 +78,35 @@ def factura_pdf(request, id):
         canvas.setFont("Helvetica", 10)
         canvas.setPageSize(GOV_LEGAL)
 
-        canvas.drawString(102, 851, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
-        canvas.drawString(102, 528, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
-        canvas.drawString(102, 205, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
+        canvas.drawString(102, 862, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
+        canvas.drawString(102, 539, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
+        canvas.drawString(102, 218, force_text(venta.fecha_de_emision.strftime('%d/%m/%Y') or ''))
         if venta.condicion_de_venta == CondicionDeVenta.CONTADO:
-            canvas.drawString(503, 851, 'X')
-            canvas.drawString(503, 528, 'X')
-            canvas.drawString(503, 205, 'X')
+            canvas.drawString(503, 862, 'X')
+            canvas.drawString(503, 539, 'X')
+            canvas.drawString(503, 218, 'X')
         elif venta.condicion_de_venta == CondicionDeVenta.CREDITO:
-            canvas.drawString(572, 851, 'X')
-            canvas.drawString(572, 528, 'X')
-            canvas.drawString(572, 205, 'X')
+            canvas.drawString(572, 862, 'X')
+            canvas.drawString(572, 539, 'X')
+            canvas.drawString(572, 218, 'X')
 
-        if not venta.punto_de_entrega:
-            canvas.drawString(130, 837, force_text(venta.cliente.razon_social or '').upper())
-            canvas.drawString(130, 514, force_text(venta.cliente.razon_social or '').upper())
-            canvas.drawString(130, 191, force_text(venta.cliente.razon_social or '').upper())
+        canvas.drawString(130, 848, force_text(venta.cliente.razon_social or '').upper())
+        canvas.drawString(130, 525, force_text(venta.cliente.razon_social or '').upper())
+        canvas.drawString(130, 204, force_text(venta.cliente.razon_social or '').upper())
+
+        canvas.drawString(51, 835, force_text(venta.cliente.ruc or ''))
+        canvas.drawString(51, 512, force_text(venta.cliente.ruc or ''))
+        canvas.drawString(51, 191, force_text(venta.cliente.ruc or ''))
+
+        if venta.punto_de_entrega:
+            canvas.drawString(71, 819, force_text(venta.punto_de_entrega.direccion or '').upper())
+            canvas.drawString(71, 496, force_text(venta.punto_de_entrega.direccion or '').upper())
+            canvas.drawString(71, 175, force_text(venta.punto_de_entrega.direccion or '').upper())
         else:
-            cliente_y_direccion = f'{venta.cliente.razon_social}   DIRECCIÓN: {venta.punto_de_entrega.direccion}'
-            canvas.drawString(130, 837, force_text(cliente_y_direccion or '').upper())
-            canvas.drawString(130, 514, force_text(cliente_y_direccion or '').upper())
-            canvas.drawString(130, 191, force_text(cliente_y_direccion or '').upper())
-        canvas.drawString(51, 823, force_text(venta.cliente.ruc or ''))
-        canvas.drawString(51, 500, force_text(venta.cliente.ruc or ''))
-        canvas.drawString(51, 177, force_text(venta.cliente.ruc or ''))
+            canvas.drawString(71, 819, force_text(venta.cliente.direccion or '').upper())
+            canvas.drawString(71, 496, force_text(venta.cliente.direccion or '').upper())
+            canvas.drawString(71, 175, force_text(venta.cliente.direccion or '').upper())
+
 
         canvas.setFont("Helvetica", 10)
         detalles = DetalleDeVenta.objects.filter(venta=venta)
@@ -129,9 +134,9 @@ def factura_pdf(request, id):
             canvas.drawString(391, 337, force_text(0).rjust(12, ' '))
             canvas.drawString(391, 14, force_text(0).rjust(12, ' '))
 
-        row_sup = 800
-        row_med = 477
-        row_inf = 154
+        row_sup = 804
+        row_med = 481
+        row_inf = 158
         for detalle in detalles:
             row_sup -= 15
             row_med -= 15
