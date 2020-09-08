@@ -82,6 +82,7 @@
         <div class="w3-card-4" style="width:90%;margin-left:auto;margin-right:auto;">
             <table style="width: 100%">
                 <tr style="background-color: #f1f1f1">
+                    <th>Fecha</th>
                     <th>Número de Remisión</th>
                     {% for producto in lista_de_productos %}
                         {% for detalle_de_venta in detalles_con_productos_diferentes %}
@@ -94,6 +95,9 @@
 
                 {% for remision in remisiones %}
                     <tr>
+                        <td>
+                            {{ remision.remision.fecha_de_emision }}
+                        </td>
                         <td>
                             <a href="/admin/remisiones/remision_detail/{{ remision.remision.pk }}">{{ remision.remision.numero_de_remision }}</a>
                         </td>

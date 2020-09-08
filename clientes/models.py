@@ -14,7 +14,7 @@ class Cliente(models.Model):
     telefono = models.CharField(max_length=50, blank=True, verbose_name="teléfono")
     email = models.CharField(max_length=100, null=True, blank=True, verbose_name="e-mail")
     dia_de_presentacion = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(30)],
-                                              verbose_name="día de presentación de facturas")
+                                              verbose_name="día de presentación")
     activo = models.BooleanField(default=True)
 
     def __str__(self):
@@ -33,7 +33,7 @@ class Cliente(models.Model):
         remisiones = apps.get_model("remisiones", "remision").objects.filter(punto_de_entrega__cliente_id=self.id).filter(estado=EstadoDocumento.PENDIENTE)
         return remisiones.count()
 
-    get_remisiones_pendientes.short_description = 'Remisiones pendientes de facturación'
+    get_remisiones_pendientes.short_description = 'Remisiones pendientes'
 
 
 class PuntoEntregaCliente(models.Model):
