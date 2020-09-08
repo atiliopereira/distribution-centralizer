@@ -51,6 +51,7 @@ def lista_ventas(request):
 
         lista_datos.append([
             venta.fecha_de_emision.strftime("%d/%m/%Y"),
+            venta.numero_de_factura,
             venta.cliente.razon_social,
             venta.get_direccion(),
             condicion,
@@ -59,10 +60,10 @@ def lista_ventas(request):
             remisiones,
         ])
     lista_datos.append([])
-    lista_datos.append(['', '', '', 'Total', separar(int(total)),])
+    lista_datos.append(['', '', '', '', '', 'Total', separar(int(total)),])
     lista_datos.append([])
     lista_datos.append(['Desde: ', desde, 'Hasta: ', hasta])
-    titulos = ['Fecha', 'Cliente', 'Dirección', 'Condición', 'Estado', 'Monto', 'Remisiones']
+    titulos = ['Fecha', 'Numero',  'Cliente', 'Dirección', 'Condición', 'Estado', 'Monto', 'Remisiones']
     response = listview_to_excel(lista_datos, nombre_archivo, titulos)
     return response
 
