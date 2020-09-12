@@ -45,6 +45,9 @@ def lista_ventas(request):
             estado = 'Pendiente'
         elif venta.estado == EstadoDocumento.CONFIRMADO:
             estado = 'Pagado'
+        elif venta.estado == EstadoDocumento.ANULADO:
+            estado = 'Anulado'
+
 
         remisiones_query = RemisionEnVenta.objects.filter(venta=venta)
         remisiones = ''
