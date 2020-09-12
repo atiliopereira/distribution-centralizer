@@ -33,11 +33,14 @@ def lista_ventas(request):
     lista_datos = []
     for venta in queryset.order_by('fecha_de_emision'):
         total += venta.total
+
+        condicion = ''
         if venta.condicion_de_venta == CondicionDeVenta.CONTADO:
             condicion = 'Contado'
         elif venta.condicion_de_venta == CondicionDeVenta.CREDITO:
             condicion = 'Crédito'
 
+        estado = ''
         if venta.estado == EstadoDocumento.PENDIENTE:
             estado = 'Pendiente'
         elif venta.estado == EstadoDocumento.CONFIRMADO:
