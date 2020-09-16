@@ -34,10 +34,13 @@ class VentaDetailView(DetailView):
 
 def get_ventas_queryset(request, form):
     qs = Venta.objects.all()
-    estado = request.GET.get('estado__exact', '')
+    estado = request.GET.get('estado', '')
     condicion_de_venta = request.GET.get('condicion_de_venta__exact', '')
     if estado != '':
-        qs = qs.filter(estado__exact=estado)
+        if estado == 'SAN':
+            qs = qs.exclude(estado__exact=EstadoDocumento.ANULADO)
+        else:
+            qs = qs.filter(estado__exact=estado)
     if condicion_de_venta != '':
         qs = qs.filter(condicion_de_venta__exact=condicion_de_venta)
     if form.cleaned_data.get('numero', ''):
