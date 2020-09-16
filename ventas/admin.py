@@ -13,6 +13,33 @@ class DetalleDeVentaInlineAdmin(admin.TabularInline):
     extra = 0
 
 
+class EstadoFilter(admin.SimpleListFilter):
+    title = 'Estado'
+    parameter_name = 'estado'
+
+    def lookups(self, request, model_admin):
+
+        return (
+            ('SAN', 'Todo sin anulados'),
+            ('PEN', 'Pendiente'),
+            ('CON', 'Confirmado'),
+            ('ANU', 'Anulado'),
+        )
+
+    def queryset(self, request, queryset):
+
+        if self.value() == 'SAN':
+            return queryset.exclude(estado=EstadoDocumento.ANULADO)
+        elif self.value() == EstadoDocumento.PENDIENTE:
+            return queryset.filter(estado=EstadoDocumento.PENDIENTE)
+        elif self.value() == EstadoDocumento.CONFIRMADO:
+            return queryset.filter(estado=EstadoDocumento.CONFIRMADO)
+        elif self.value() == EstadoDocumento.ANULADO:
+            return queryset.filter(estado=EstadoDocumento.ANULADO)
+        else:
+            return queryset
+
+
 class VentaAdmin(admin.ModelAdmin):
     class Media:
         js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js',)
@@ -20,7 +47,7 @@ class VentaAdmin(admin.ModelAdmin):
     form = VentaForm
     list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'get_direccion',
                     'estado', 'total', 'acciones', 'ver', 'imprimir', 'anular',)
-    list_filter = ('condicion_de_venta', 'estado')
+    list_filter = ('condicion_de_venta', EstadoFilter)
     inlines = (DetalleDeVentaInlineAdmin,)
     autocomplete_fields = ('cliente',)
     actions = None
