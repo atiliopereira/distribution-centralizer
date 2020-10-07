@@ -52,7 +52,7 @@ class Venta(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             self.total = self.get_total()
-        if self.condicion_de_venta == CondicionDeVenta.CONTADO:
+        if self.condicion_de_venta == CondicionDeVenta.CONTADO and not self.pk:
             self.estado = EstadoDocumento.CONFIRMADO
         super(Venta, self).save(*args, **kwargs)
 
