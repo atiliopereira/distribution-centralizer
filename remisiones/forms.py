@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import AdminDateWidget, AutocompleteSelect
 
 from remisiones.models import Remision
+from sistema.constants import EstadoDocumento
 
 
 class RemisionSearchForm(forms.Form):
@@ -28,3 +29,13 @@ class RemisionForm(forms.ModelForm):
                 attrs={'data-dropdown-auto-width': 'true', 'style': "width: 100%;"}
             ),
         }
+
+    def clean(self):
+        cleaned_data = super(RemisionForm, self).clean()
+        numero_de_remision = cleaned_data.get("numero_de_remision")
+
+        if Remision.objects.filter(numero_de_remision=numero_de_remision,
+                                   estado=EstadoDocumento.PENDIENTE).exists() or Remision.objects.filter(
+                numero_de_remision=numero_de_remision, estado=EstadoDocumento.CONFIRMADO).exists():
+            msg = "Ya existe una remisión con ese número."
+            self.add_error('numero_de_remision', msg)
