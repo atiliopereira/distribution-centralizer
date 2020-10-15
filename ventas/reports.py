@@ -48,6 +48,9 @@ def lista_ventas(request):
         elif venta.estado == EstadoDocumento.ANULADO:
             estado = 'Anulado'
 
+        vehiculo = ''
+        if venta.vehiculo:
+            vehiculo = venta.vehiculo.__str__()
 
         remisiones_query = RemisionEnVenta.objects.filter(venta=venta)
         remisiones = ''
@@ -60,6 +63,7 @@ def lista_ventas(request):
             venta.numero_de_factura,
             venta.cliente.razon_social,
             venta.get_direccion(),
+            vehiculo,
             condicion,
             estado,
             separar(int(venta.total)),
@@ -69,7 +73,7 @@ def lista_ventas(request):
     lista_datos.append(['', '', '', '', '', 'Total', separar(int(total)),])
     lista_datos.append([])
     lista_datos.append(['Desde: ', desde, 'Hasta: ', hasta])
-    titulos = ['Fecha', 'Numero',  'Cliente', 'Dirección', 'Condición', 'Estado', 'Monto', 'Remisiones']
+    titulos = ['Fecha', 'Numero',  'Cliente', 'Dirección', 'Vehículo', 'Condición', 'Estado', 'Monto', 'Remisiones']
     response = listview_to_excel(lista_datos, nombre_archivo, titulos)
     return response
 

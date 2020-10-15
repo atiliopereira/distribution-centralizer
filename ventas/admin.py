@@ -45,11 +45,11 @@ class VentaAdmin(admin.ModelAdmin):
         js = ('//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js', 'js/admin/venta/change_form.js',)
 
     form = VentaForm
-    list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'get_direccion',
-                    'estado', 'total', 'acciones', 'ver', 'imprimir', 'anular',)
-    list_filter = ('condicion_de_venta', EstadoFilter)
+    list_display = ('editar', 'fecha_de_emision', 'numero_de_factura', 'condicion_de_venta', 'cliente', 'vehiculo',
+                    'get_direccion', 'estado', 'total', 'acciones', 'ver', 'imprimir', 'anular',)
+    list_filter = ('condicion_de_venta', EstadoFilter, 'vehiculo')
     inlines = (DetalleDeVentaInlineAdmin,)
-    autocomplete_fields = ('cliente',)
+    autocomplete_fields = ('cliente', 'vehiculo')
     actions = None
 
     def editar(self, obj):

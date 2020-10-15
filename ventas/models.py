@@ -5,6 +5,7 @@ from django.db import models
 
 from clientes.models import Cliente, PuntoEntregaCliente
 from remisiones.models import Remision, DetalleDeRemision
+from sistema.models import Vehiculo
 from ventas.constants import CondicionDeVenta, Iva
 from productos.models import Producto, ProductoCliente, get_precio
 from sistema.constants import EstadoDocumento
@@ -22,6 +23,7 @@ class Venta(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     punto_de_entrega = models.ForeignKey(PuntoEntregaCliente, null=True, blank=True,
                                   verbose_name="Dirección del punto de entrega", on_delete=models.PROTECT, editable=False)
+    vehiculo = models.ForeignKey(Vehiculo, null=True, blank=True, on_delete=models.PROTECT)
     iva = models.CharField(max_length=2, choices=Iva.PORCENTAJES, default=Iva.DIEZ)
     estado = models.CharField(max_length=3, choices=EstadoDocumento.ESTADOS,
                               default=EstadoDocumento.PENDIENTE, editable=False)

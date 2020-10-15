@@ -36,6 +36,7 @@ def get_ventas_queryset(request, form):
     qs = Venta.objects.all()
     estado = request.GET.get('estado', '')
     condicion_de_venta = request.GET.get('condicion_de_venta__exact', '')
+    vehiculo = request.GET.get('vehiculo__id__exact', '')
     if estado != '':
         if estado == 'SAN':
             qs = qs.exclude(estado__exact=EstadoDocumento.ANULADO)
@@ -43,6 +44,8 @@ def get_ventas_queryset(request, form):
             qs = qs.filter(estado__exact=estado)
     if condicion_de_venta != '':
         qs = qs.filter(condicion_de_venta__exact=condicion_de_venta)
+    if vehiculo != '':
+        qs = qs.filter(vehiculo__id__exact=vehiculo)
     if form.cleaned_data.get('numero', ''):
         qs = qs.filter(numero_de_factura__icontains=form.cleaned_data['numero'])
     if form.cleaned_data.get('remision', ''):
