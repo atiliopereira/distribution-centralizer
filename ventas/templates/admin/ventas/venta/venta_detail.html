@@ -67,7 +67,12 @@
                     <th scope="row"> Dirección de entrega </th>
                     <td>{{ object.get_direccion }}</td>
                 </tr>
-
+                {% if object.vehiculo %}
+                <tr>
+                    <th scope="row"> Vehículo </th>
+                    <td>{{ object.vehiculo }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                     <th scope="row"> Iva </th>
                     <td> {{ object.get_iva_display }} </td>
