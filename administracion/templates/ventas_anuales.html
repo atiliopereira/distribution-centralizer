@@ -1,0 +1,51 @@
+{% extends 'admin/base_site.html' %}
+{% block title %} Panel de administración {% endblock title %}
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="/admin/administracion/dashboard">Administración</a>
+        &rsaquo; Ventas mensuales
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function (){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [{% for mes in meses %}'{{ mes }}',{% endfor %}],
+                    datasets: [{
+                        label: 'total mensual en Millones',
+                        data: [{% for total_mes in total_ventas %}{{ total_mes }},{% endfor %}],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}
+
+
+{% block content %}
+    <div></div>
+    <canvas id="myChart" style="position: relative; height:70vh; width:80vw">></canvas>
+{% endblock content%}

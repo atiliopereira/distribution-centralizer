@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import random
 from django.http import HttpResponse
 from django.utils.text import get_valid_filename
 import xlwt
@@ -116,3 +117,40 @@ def listview_to_excel(values_list, name, titulos):
 
 
 NOMBRE_EMPRESA = 'Vertientes'
+
+
+def random_colors(size):
+    result = []
+    for i in range(size):
+        linea = f'rgba({random.randint(0, 255)}, {random.randint(0, 255)}, {random.randint(0, 255)}, 0.5)'
+        result.append(linea)
+    return result
+
+
+def mes_anho_en_letras(mes, anho):
+    if mes == 1:
+        return f'ENERO-{anho}'
+    elif mes == 2:
+        return f'FEBRERO-{anho}'
+    elif mes == 3:
+        return f'MARZO-{anho}'
+    elif mes == 4:
+        return f'ABRIL-{anho}'
+    elif mes == 5:
+        return f'MAYO-{anho}'
+    elif mes == 6:
+        return f'JUNIO-{anho}'
+    elif mes == 7:
+        return f'JULIO-{anho}'
+    elif mes == 8:
+        return f'AGOSTO-{anho}'
+    elif mes == 9:
+        return f'SETIEMBRE-{anho}'
+    elif mes == 10:
+        return f'OCTUBRE-{anho}'
+    elif mes == 11:
+        return f'NOVIEMBRE-{anho}'
+    elif mes == 12:
+        return f'DICIEMBRE-{anho}'
+    else:
+        return None
