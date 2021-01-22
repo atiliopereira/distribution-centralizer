@@ -1,0 +1,104 @@
+{% extends "admin/base_site.html" %}
+{% load venta_tags %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; Panel de administración
+    </div>
+
+{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+
+    <h1 style="text-align:center; color: black">Panel de administración</h1>
+    <h2>Gráficos Disponibles</h2>
+    <div class="w3-card-4" style="width:50%;">
+        <a href="/admin/administracion/ventasporcliente">
+            <div class="w3-container">
+                <table summary="ventas por clientes">
+                    <tbody>
+                        <tr>
+                            <td> <img class="font-light text-white"><img src="/static/img/tabla_icono.png"> </td>
+                            <td>
+                                <div class="container">
+                                    <h4><b>Ventas por Clientes</b></h4>
+                                    <p>Tabla con facturación por cliente.</p>
+                                    <p>Sepa quienes son sus clientes que le generan más ganancias.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </a>
+    </div>
+
+    <div class="w3-card-4" style="width:50%;">
+        <a href="/admin/administracion/remisioneschart">
+        <div class="w3-container">
+            <table summary="Remisiones por vehículos">
+                <tbody>
+                    <tr>
+                        <td> <img class="font-light text-white"><img src="/static/img/barras_icono.png"> </td>
+                        <td>
+                            <div class="container">
+                                <h4><b>Remisiones por vehículos</b></h4>
+                                <p>Gráfico con las frecuencia de remisiones por cada vehículo.</p>
+                                <p>Conozca cuáles son los móviles que realizan más entregas</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </a>
+    </div>
+
+    <div class="w3-card-4" style="width:50%;">
+        <a href="/admin/administracion/ventaschart">
+            <div class="w3-container">
+                <table summary="ventas por tiempo">
+                    <tbody>
+                        <tr>
+                            <td> <img class="font-light text-white"><img src="/static/img/linea_icono.png"> </td>
+                            <td>
+                                <div class="container">
+                                    <h4><b>Ventas anuales</b></h4>
+                                    <p>Gráfico de facturación por mes.</p>
+                                    <p>Muestra la variación de ventas durante los últimos 12 meses.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

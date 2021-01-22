@@ -1,0 +1,75 @@
+{% extends 'admin/base_site.html' %}
+{% block title %} Panel de administración {% endblock title %}
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="/admin/administracion/dashboard">Administración</a>
+        &rsaquo; Servicios por frecuencia
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function (){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: [{% for vehiculo in object_list %}'{{ vehiculo.0 }}',{% endfor %}],
+                    datasets: [{
+                        label: 'cant. de remisiones',
+                        data: [{% for vehiculo in object_list %}{{ vehiculo.1 }},{% endfor %}],
+                        backgroundColor: [{% for color in colores %}'{{ color }}',{% endfor %}],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}
+
+
+{% block content %}
+    <div style="width:40%;margin-left:auto;margin-right:auto;">
+        <form class="form" method="get">
+            <table>
+                <tbody>
+                    <tr>
+                        <th style="vertical-align:middle">
+                            <strong> Fecha desde:</strong>
+                        </th>
+                        <td style="vertical-align:middle">
+                            <input type="date" class="date" name="fecha_desde" value="{{ fecha_desde }}">
+                        </td>
+
+
+                        <th style="vertical-align:middle">
+                            <strong> Fecha hasta:</strong>
+                        </th>
+                        <td style="vertical-align:middle">
+                            <input type="date" class="date" name="fecha_hasta" value="{{ fecha_hasta }}">
+                        </td>
+                        <td>
+                            <a class="btn btn-info" href="/admin/administracion/servicioschart/" title="Limpiar Filtros">
+                                <i class="fa fa-undo"></i>
+                            </a>
+                            <input type="submit" value="Buscar" class="btn btn-success">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <canvas id="myChart" style="position: relative; height:70vh; width:80vw"></canvas>
+{% endblock content%}
