@@ -1,0 +1,101 @@
+{% extends "admin/base_site.html" %}
+{% load venta_tags %}
+
+{% block breadcrumbs %}
+
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Inicio</a>
+        &rsaquo; <a href="/admin/administracion/dashboard">Administración</a>
+        &rsaquo; Ventas por clientes
+    </div>
+
+{% endblock %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% endblock %}
+
+{% block content %}
+    <style>
+        .w3-card-4 {
+          margin-bottom: 1%;
+        }
+        table {
+            width:100%;
+        }
+        tbody{
+            width: 100%;
+            display: table;
+        }
+        .label {
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 5px;
+        }
+    </style>
+
+    <h1 style="text-align:center; color: black">Ventas por cliente</h1>
+    <div style="width:40%;margin-left:auto;margin-right:auto;">
+        <form class="form" method="get">
+            <table>
+                <tbody>
+                    <tr>
+                        <th style="vertical-align:middle">
+                            <strong> Fecha desde:</strong>
+                        </th>
+                        <td style="vertical-align:middle">
+                            <input type="date" class="date" name="fecha_desde" value="{{ fecha_desde }}">
+                        </td>
+
+
+                        <th style="vertical-align:middle">
+                            <strong> Fecha hasta:</strong>
+                        </th>
+                        <td style="vertical-align:middle">
+                            <input type="date" class="date" name="fecha_hasta" value="{{ fecha_hasta }}">
+                        </td>
+                        <td>
+                            <a class="btn btn-info" href="/admin/administracion/ventasporcliente/" title="Limpiar Filtros">
+                                <i class="fa fa-undo"></i>
+                            </a>
+                            <input type="submit" value="Buscar" class="btn btn-success">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+<div class="w3-card-4" style="width:80%;margin-left:auto;margin-right:auto;">
+
+    <table style="width: 100%">
+        <tr>
+            <th>Orden</th>
+			<th>Cliente</th>
+			<th>Cantidad de ventas</th>
+            <th>Total facturado</th>
+        </tr>
+
+
+
+    {% for obj in object_list %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><a href="/admin/clientes/cliente_detail/{{ obj.0.id|eliminar_separador_miles }}/">{{ obj.0.razon_social }}</a></td>
+        <td>
+            {{ obj.1 }}
+        </td>
+        <td>
+            {{ obj.2 }}
+        </td>
+
+    </tr>
+    {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}
