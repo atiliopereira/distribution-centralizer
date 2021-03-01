@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from sistema.constants import EstadoDocumento
 from sistema.globales import separar
 from ventas.forms import VentaSearchForm, VentaForm
-from ventas.models import DetalleDeVenta, Venta
+from ventas.models import DetalleDeVenta, Venta, RemisionEnVenta
 from ventas.views import get_ventas_queryset
 
 
@@ -91,8 +91,16 @@ class VentaAdmin(admin.ModelAdmin):
         return super(VentaAdmin, self).lookup_allowed(lookup, *args, **kwargs)
 
     def get_queryset(self, request):
-        form = self.advanced_search_form
-        qs = get_ventas_queryset(request, form)
+        form = getattr(self, 'advanced_search_form', None)
+        qs = super(VentaAdmin, self).get_queryset(request)
+        if form:
+            if form.cleaned_data.get('numero', ''):
+                qs = qs.filter(numero_de_factura__icontains=form.cleaned_data['numero'])
+            if form.cleaned_data.get('remision', ''):
+                qs = qs.filter(pk__in=[i.venta_id for i in RemisionEnVenta.objects.filter(
+                    remision__numero_de_remision__icontains=form.cleaned_data['remision'])])
+            if form.cleaned_data.get('cliente', ''):
+                qs = qs.filter(cliente__razon_social__icontains=form.cleaned_data.get('cliente', ''))
         return qs
 
     def changelist_view(self, request, extra_context=None, **kwargs):
