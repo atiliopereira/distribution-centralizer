@@ -121,8 +121,11 @@ class RemisionAdmin(admin.ModelAdmin):
     crear_factura_action.short_description = "Crear Factura con remision/es seleccionada/s"
 
     def get_queryset(self, request):
-        form = self.advanced_search_form
-        qs = get_remisiones_queryset(request, form)
+        form = getattr(self, 'advanced_search_form', None)
+        if form:
+            qs = get_remisiones_queryset(request, form)
+        else:
+            qs = super(RemisionAdmin, self).get_queryset()
         return qs
 
     def changelist_view(self, request, extra_context=None, **kwargs):
