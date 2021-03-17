@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'sistema',
     'remisiones',
     'ventas',
-    'administracion',
 ]
 
 MIDDLEWARE = [
