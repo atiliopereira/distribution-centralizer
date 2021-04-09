@@ -10,7 +10,7 @@ from productos.views import get_productoscliente_queryset
 @register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
     search_fields = ('descripcion',)
-    list_display = ('editar', 'descripcion', 'precio', 'activo', 'ver', )
+    list_display = ('editar', 'ver', 'descripcion', 'precio', 'activo',)
     list_filter = ('activo', )
     actions = None
 
