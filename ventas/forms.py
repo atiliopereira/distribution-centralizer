@@ -37,6 +37,18 @@ class VentaForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(VentaForm, self).clean()
         total = cleaned_data.get("total")
+        numero_de_factura = cleaned_data.get("numero_de_factura")
+
         if total == 0:
             msg = "Total no puede ser cero."
             self.add_error('total', msg)
+
+        if numero_de_factura != '000-000-0000000':
+            ventas = Venta.objects.filter(numero_de_factura=numero_de_factura)
+            if self.instance.pk:
+                ventas = ventas.exclude(pk=self.instance.pk)
+            for venta in ventas:
+                if numero_de_factura == venta.numero_de_factura:
+                    msg = "Ya existe una venta con el mismo número de factura"
+                    self.add_error('numero_de_factura', msg)
+                    break
