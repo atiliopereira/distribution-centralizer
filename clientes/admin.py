@@ -22,10 +22,14 @@ class PuntoEntregaClienteInline(admin.TabularInline):
 
 class ClienteAdmin(admin.ModelAdmin):
     search_fields = ('razon_social', 'ruc', 'direccion', 'telefono', 'email',)
-    list_display = ('razon_social', 'ruc', 'direccion', 'telefono', 'email', 'dia_de_presentacion',
-                    'get_deuda', 'get_remisiones_pendientes', 'ver', 'activo',)
+    list_display = ('editar', 'ver', 'razon_social', 'ruc', 'direccion', 'telefono', 'email', 'dia_de_presentacion',
+                    'get_deuda', 'get_remisiones_pendientes', 'activo',)
     inlines = (PuntoEntregaClienteInline, )
     actions = None
+
+    def editar(self, obj):
+        html = '<a href="/admin/clientes/cliente/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
+        return mark_safe(html)
 
     def ver(self, obj):
         html = '<a href="/admin/clientes/cliente_detail/%s" class="icon-block"> <i class="fa fa-eye"></i></a>' % obj.pk
