@@ -64,24 +64,6 @@ function calcular_total() {
     $('#id_total').val(separarMiles(total));
 }
 
-function obtener_precio() {
-    var rows = $("tr[id*='detalledeventa_set']");
-    var rows_length = rows.length -1;
-    for( var i=0; i<rows_length; i++){
-        var producto = document.getElementById('id_detalledeventa_set-'+i+'-producto').value;
-        var indice = i;
-        $.ajax({
-                data : {'producto_id' : producto, 'cliente_id': document.getElementById('id_cliente').value},
-                url : "/admin/productos/getproducto/",
-                type : "get",
-                success : function(data){
-                   $("#id_detalledeventa_set-" + indice.toString() + "-precio_unitario").val(data.precio);
-                   calcular_subtotal();
-                }
-            });
-    }
-}
-
 function unformat(input){
 		return input.value.replace(/\./g,'').replace(',','.');
 }
