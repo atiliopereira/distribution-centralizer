@@ -35,10 +35,15 @@ def lista_remisiones(request):
             else:
                 cantidades.append(0)
 
+        movil = '-'
+        if remision.vehiculo:
+            movil = remision.vehiculo.__str__()
+
         linea = [
             remision.fecha_de_emision.strftime("%d/%m/%Y"),
             remision.numero_de_remision,
             remision.punto_de_entrega.__str__(),
+            movil,
             remision.get_estado_display(),
         ]
         linea.extend(cantidades)
@@ -49,7 +54,7 @@ def lista_remisiones(request):
     lista_datos.append(totales_row)
     lista_datos.append([])
     lista_datos.append(['Desde: ', desde, 'Hasta: ', hasta])
-    titulos = ['Fecha', 'Numero de Remisión', 'Punto de entrega', 'Estado']
+    titulos = ['Fecha', 'Numero de Remisión', 'Punto de entrega', 'Móvil', 'Estado']
     for titulo_producto in titulos_productos:
         titulos.append(titulo_producto)
     response = listview_to_excel(lista_datos, nombre_archivo, titulos)
