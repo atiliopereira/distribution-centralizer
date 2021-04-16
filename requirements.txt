@@ -4,3 +4,4 @@ coverage==5.2.1
 python-dateutil==2.8.1
 xlwt==1.3.0
 reportlab==3.5.48
+django-autocomplete-light==3.8.2
