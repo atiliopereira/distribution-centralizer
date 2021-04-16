@@ -3,13 +3,14 @@ from django.utils.safestring import mark_safe
 
 from sistema.constants import EstadoDocumento
 from sistema.globales import separar
-from ventas.forms import VentaSearchForm, VentaForm
-from ventas.models import DetalleDeVenta, Venta, RemisionEnVenta
+from ventas.forms import VentaSearchForm, VentaForm, DetalleDeVentaForm
+from ventas.models import DetalleDeVenta, Venta
 from ventas.views import get_ventas_queryset
 
 
 class DetalleDeVentaInlineAdmin(admin.TabularInline):
     model = DetalleDeVenta
+    form = DetalleDeVentaForm
     extra = 0
 
 
@@ -53,7 +54,6 @@ class VentaAdmin(admin.ModelAdmin):
     actions = None
 
     def editar(self, obj):
-
         if obj.estado == EstadoDocumento.PENDIENTE:
             html = '<a href="/admin/ventas/venta/%s" class="icon-block"> <i class="fa fa-edit"></i></a>' % obj.pk
         else:

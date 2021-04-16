@@ -1,7 +1,8 @@
+from dal import autocomplete
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
 
-from ventas.models import Venta
+from ventas.models import Venta, DetalleDeVenta
 
 
 class VentaSearchForm(forms.Form):
@@ -52,3 +53,26 @@ class VentaForm(forms.ModelForm):
                     msg = "Ya existe una venta con el mismo número de factura"
                     self.add_error('numero_de_factura', msg)
                     break
+
+
+class DetalleDeVentaForm(forms.ModelForm):
+
+    class Meta:
+        model = DetalleDeVenta
+        fields = '__all__'
+
+        widgets = {
+            'producto': autocomplete.ModelSelect2(url='producto-autocomplete',
+                                                  attrs={'data-dropdown-auto-width': 'true', 'style': "width: 100%;"}),
+            'precio_unitario': forms.TextInput(
+                attrs={'style': 'text-align:right', 'size': '20', 'class': 'auto', 'data-a-sep': '.',
+                       'data-a-dec': ',', }),
+            'subtotal': forms.TextInput(
+                attrs={'style': 'text-align:right', 'size': '20', 'class': 'auto', 'data-a-sep': '.',
+                       'data-a-dec': ',', }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(DetalleDeVentaForm, self).__init__(*args, **kwargs)
+        self.fields['precio_unitario'].widget.attrs['readonly'] = True
+        self.fields['subtotal'].widget.attrs['readonly'] = True

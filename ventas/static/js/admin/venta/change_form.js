@@ -1,34 +1,58 @@
-jQuery.noConflict();
-
 (function($) {
-    jQuery(document).ready(function() {
-        jQuery('#detalledeventa_set-group').change(function(){
-            calcular_subtotal();
-            obtener_precio();
+    $(document).ready(function() {
+        $('select').change(function(){
+            vector = $(this).attr("id").split("-");
+            if(vector[0] === "id_detalledeventa_set"){
+                var optionSelected = $(this).find("option:selected");
+                var valueSelected  = optionSelected.val();
+                if(!valueSelected){
+                    $("#id_detalledeventa_set-" + vector[1] + "-precio_unitario").val("0");
+                    return
+                }
+                $.ajax({
+                    data : {'producto_id' : valueSelected, 'cliente_id': document.getElementById('id_cliente').value},
+                    url : "/admin/productos/getproducto/",
+                    type : "get",
+                    success : function(data){
+                        $("#id_detalledeventa_set-" + vector[1] + "-precio_unitario").val(separarMiles(data.precio));
+                        var cantidad = document.getElementById('id_detalledeventa_set-' + vector[1] + '-cantidad').value;
+                        var precio = data.precio;
+                        $("#id_detalledeventa_set-" + vector[1] + "-subtotal").val(separarMiles(cantidad*precio));
+                        calcular_total();
+                    }
+                });
+            }
         });
 
-        jQuery('form input[type=submit]').click(function(e) {
+        $('#detalledeventa_set-group').change(function(e){
+            var element_id = e.target.id;
+            if (element_id.includes('cantidad')){
+                vector = element_id.split("-");
+                calcular_subtotal(vector[1]);
+
+            }
+        });
+
+        $('form input[type=submit]').click(function(e) {
             guardar();
         });
     });
-})(django.jQuery);
+})(jQuery);
 
-function calcular_subtotal() {
-    subtotal = 0;
-    var rows = jQuery("tr[id*='detalledeventa_set']");
-    var rows_length = rows.length -1; // para evadir el empty
-    for( var i=0; i<rows_length; i++){
-        var cantidad = document.getElementById('id_detalledeventa_set-'+i+'-cantidad').value;
-        var precio = document.getElementById('id_detalledeventa_set-'+i+'-precio_unitario').value;
-        jQuery("#id_detalledeventa_set-" + i + "-subtotal").val(cantidad*precio);
-    }
+function calcular_subtotal(element_id) {
+    let cantidad_element = document.getElementById('id_detalledeventa_set-' + element_id + '-cantidad');
+    let precio_element = document.getElementById('id_detalledeventa_set-' + element_id + '-precio_unitario');
+    let cantidad_int = parseInt(unformat(cantidad_element));
+    let precio_int = parseInt(unformat(precio_element));
+
+    $("#id_detalledeventa_set-" + element_id + "-subtotal").val(separarMiles(cantidad_int*precio_int));
     calcular_total();
 }
 
 
 function calcular_total() {
     total = 0;
-    var rows = jQuery("tr[id*='detalledeventa_set']");
+    var rows = $("tr[id*='detalledeventa_set']");
     var rows_length = rows.length -1;
 
     for(var i=0 ; i<rows_length ; i++){
@@ -37,25 +61,7 @@ function calcular_total() {
         total += parseInt(unformat(subtotal));
        }
     }
-    jQuery('#id_total').val(separarMiles(total));
-}
-
-function obtener_precio() {
-    var rows = jQuery("tr[id*='detalledeventa_set']");
-    var rows_length = rows.length -1;
-    for( var i=0; i<rows_length; i++){
-        var producto = document.getElementById('id_detalledeventa_set-'+i+'-producto').value;
-        var indice = i;
-        jQuery.ajax({
-                data : {'producto_id' : producto, 'cliente_id': document.getElementById('id_cliente').value},
-                url : "/admin/productos/getproducto/",
-                type : "get",
-                success : function(data){
-                   jQuery("#id_detalledeventa_set-" + indice.toString() + "-precio_unitario").val(data.precio);
-                   calcular_subtotal();
-                }
-            });
-    }
+    $('#id_total').val(separarMiles(total));
 }
 
 function unformat(input){
@@ -67,7 +73,7 @@ function separarMiles(x) {
 }
 
 function guardar() {
-    jQuery('.auto').each(function (){
-        jQuery(this).val((jQuery(this).val()!='')?unformat(document.getElementById(this.id.toString())):'');
+    $('.auto').each(function (){
+        $(this).val(($(this).val()!='')?unformat(document.getElementById(this.id.toString())):'');
     });
 }
