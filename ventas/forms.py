@@ -23,6 +23,7 @@ class VentaForm(forms.ModelForm):
     class Meta:
         model = Venta
         fields = '__all__'
+        localized_fields = '__all__'
 
         widgets = {
             'numero_de_factura': forms.TextInput(attrs={'data-mask': "000-000-0000"}),
@@ -60,6 +61,7 @@ class DetalleDeVentaForm(forms.ModelForm):
     class Meta:
         model = DetalleDeVenta
         fields = '__all__'
+        localized_fields = '__all__'
 
         widgets = {
             'producto': autocomplete.ModelSelect2(url='producto-autocomplete',
